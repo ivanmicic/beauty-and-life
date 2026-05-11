@@ -1,0 +1,2355 @@
+<!DOCTYPE html>
+<html lang="sr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Kozmetički salon Beauty and Life — Danijela Stojanović. Manikir, gel/akril, masaža, šminka, solarijum, obuke. Stari Korzo 30, Požarevac." />
+  <meta name="theme-color" content="#fdf8f5" />
+  <title>Beauty and Life — Kozmetički salon, Požarevac</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin="" />
+
+  <style>
+    /* =========================================================
+       DESIGN TOKENS
+       ========================================================= */
+    :root {
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'Jost', 'Helvetica Neue', sans-serif;
+
+      --color-bg: #fdf8f5;
+      --color-surface: #fff9f6;
+      --color-surface-2: #fff4ef;
+      --color-surface-offset: #f5ede7;
+      --color-border: #e8d8cf;
+      --color-divider: #ddd0c8;
+      --color-text: #2c1f18;
+      --color-text-muted: #7a6158;
+      --color-text-faint: #b8a49c;
+      --color-primary: #c8836a;
+      --color-primary-hover: #b06b54;
+      --color-gold: #c9a84c;
+      --color-gold-hover: #a88a38;
+      --color-text-inverse: #fdf8f5;
+
+      --shadow-sm: 0 1px 3px oklch(0.3 0.05 30 / 0.08);
+      --shadow-md: 0 4px 16px oklch(0.3 0.05 30 / 0.10);
+      --shadow-lg: 0 12px 40px oklch(0.3 0.05 30 / 0.14);
+
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1.25rem;
+      --radius-full: 9999px;
+
+      --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+      --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+      --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+      --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+      --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+      --text-2xl:  clamp(2rem,     1.2rem  + 2.5vw,  3.5rem);
+      --text-hero: clamp(2.8rem,   1rem    + 5vw,    5.5rem);
+
+      --space-1:  0.25rem;
+      --space-2:  0.5rem;
+      --space-3:  0.75rem;
+      --space-4:  1rem;
+      --space-5:  1.25rem;
+      --space-6:  1.5rem;
+      --space-7:  1.75rem;
+      --space-8:  2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-14: 3.5rem;
+      --space-16: 4rem;
+      --space-20: 5rem;
+      --space-24: 6rem;
+      --space-28: 7rem;
+      --space-32: 8rem;
+
+      --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-slow: 600ms cubic-bezier(0.16, 1, 0.3, 1);
+
+      --nav-h: 72px;
+      --container-w: 1200px;
+    }
+
+    [data-theme="dark"] {
+      --color-bg: #1a1210;
+      --color-surface: #201816;
+      --color-surface-2: #261e1b;
+      --color-surface-offset: #2e2420;
+      --color-border: #3d2e28;
+      --color-divider: #362a25;
+      --color-text: #f0e6e0;
+      --color-text-muted: #b09488;
+      --color-text-faint: #7a6158;
+      --color-primary: #e0a08a;
+      --color-primary-hover: #c8836a;
+      --color-gold: #e8c46a;
+      --color-gold-hover: #c9a84c;
+
+      --shadow-sm: 0 1px 3px oklch(0 0 0 / 0.35);
+      --shadow-md: 0 4px 16px oklch(0 0 0 / 0.4);
+      --shadow-lg: 0 12px 40px oklch(0 0 0 / 0.55);
+    }
+
+    /* =========================================================
+       BASE
+       ========================================================= */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--color-text);
+      background-color: var(--color-bg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background-color var(--transition), color var(--transition);
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-display);
+      font-weight: 500;
+      line-height: 1.15;
+      margin: 0 0 var(--space-4);
+      color: var(--color-text);
+      letter-spacing: -0.01em;
+    }
+    h1 { font-size: var(--text-hero); }
+    h2 { font-size: var(--text-2xl); }
+    h3 { font-size: var(--text-xl); }
+    p  { margin: 0 0 var(--space-4); }
+
+    a {
+      color: var(--color-primary);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+    a:hover { color: var(--color-primary-hover); }
+
+    img, svg { max-width: 100%; display: block; }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--container-w);
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+    }
+
+    .section {
+      padding: var(--space-20) 0;
+      position: relative;
+    }
+    @media (min-width: 768px) {
+      .section { padding: var(--space-24) 0; }
+    }
+
+    .section-eyebrow {
+      display: inline-block;
+      font-size: var(--text-xs);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      font-weight: 500;
+      margin-bottom: var(--space-3);
+    }
+
+    .section-title {
+      font-size: var(--text-2xl);
+      margin-bottom: var(--space-4);
+    }
+
+    .section-subtitle {
+      font-size: var(--text-base);
+      color: var(--color-text-muted);
+      max-width: 60ch;
+      margin-bottom: var(--space-10);
+    }
+
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: var(--space-4);
+      background: var(--color-primary);
+      color: var(--color-text-inverse);
+      padding: var(--space-3) var(--space-5);
+      border-radius: var(--radius-md);
+      font-weight: 500;
+      z-index: 1000;
+      transition: top var(--transition);
+    }
+    .skip-link:focus { top: var(--space-4); color: var(--color-text-inverse); }
+
+    /* =========================================================
+       BUTTONS
+       ========================================================= */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      padding: var(--space-4) var(--space-7);
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      border-radius: var(--radius-full);
+      text-decoration: none;
+      transition: transform var(--transition), background-color var(--transition), box-shadow var(--transition), color var(--transition);
+      min-height: 44px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background-color: var(--color-primary);
+      color: var(--color-text-inverse);
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-primary:hover {
+      background-color: var(--color-primary-hover);
+      color: var(--color-text-inverse);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+    }
+    .btn-secondary:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      transform: translateY(-2px);
+    }
+    .btn-gold {
+      background-color: var(--color-gold);
+      color: #2c1f18;
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-gold:hover {
+      background-color: var(--color-gold-hover);
+      color: #2c1f18;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .btn-ghost-link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      color: var(--color-text);
+      font-weight: 500;
+      font-size: var(--text-sm);
+      letter-spacing: 0.02em;
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid transparent;
+      transition: color var(--transition), border-color var(--transition), gap var(--transition);
+    }
+    .btn-ghost-link:hover {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
+      gap: var(--space-3);
+    }
+
+    /* =========================================================
+       NAVBAR
+       ========================================================= */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav-h);
+      z-index: 100;
+      background-color: oklch(from var(--color-bg) l c h / 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-border);
+      transition: background-color var(--transition), border-color var(--transition);
+    }
+    .nav-inner {
+      max-width: var(--container-w);
+      height: 100%;
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+    }
+    .nav-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-3);
+      text-decoration: none;
+      color: var(--color-text);
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .nav-logo svg { color: var(--color-primary); }
+    .nav-logo:hover { color: var(--color-text); }
+    .nav-logo-text { display: none; }
+    @media (min-width: 1024px) {
+      .nav-logo-text { display: inline; }
+    }
+
+    .nav-links {
+      display: none;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      gap: var(--space-7);
+      align-items: center;
+    }
+    @media (min-width: 1024px) {
+      .nav-links { display: flex; }
+    }
+    .nav-links a {
+      color: var(--color-text);
+      font-size: var(--text-sm);
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      position: relative;
+      padding: var(--space-2) 0;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      background-color: var(--color-primary);
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform var(--transition);
+    }
+    .nav-links a:hover { color: var(--color-primary); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-full);
+      color: var(--color-text);
+      transition: background-color var(--transition), color var(--transition);
+    }
+    .icon-btn:hover {
+      background-color: var(--color-surface-offset);
+      color: var(--color-primary);
+    }
+    .lang-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: var(--space-2) var(--space-4);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      font-size: var(--text-xs);
+      letter-spacing: 0.1em;
+      color: var(--color-text);
+      font-weight: 500;
+      min-height: 36px;
+      transition: border-color var(--transition), color var(--transition);
+    }
+    .lang-toggle:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .lang-toggle .active { color: var(--color-primary); }
+
+    .theme-toggle .moon { display: none; }
+    [data-theme="dark"] .theme-toggle .sun { display: none; }
+    [data-theme="dark"] .theme-toggle .moon { display: block; }
+
+    .hamburger {
+      width: 44px;
+      height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 5px;
+      border-radius: var(--radius-md);
+      transition: background-color var(--transition);
+    }
+    @media (min-width: 1024px) { .hamburger { display: none; } }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background-color: var(--color-text);
+      border-radius: 2px;
+      transition: transform var(--transition), opacity var(--transition);
+    }
+    .hamburger.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.is-open span:nth-child(2) { opacity: 0; }
+    .hamburger.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile overlay nav */
+    .mobile-nav {
+      position: fixed;
+      inset: 0;
+      background-color: var(--color-bg);
+      z-index: 99;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-8);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition), visibility var(--transition);
+    }
+    .mobile-nav.is-open { opacity: 1; visibility: visible; }
+    .mobile-nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+      text-align: center;
+    }
+    .mobile-nav a {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      color: var(--color-text);
+      font-weight: 500;
+    }
+    .mobile-nav a:hover { color: var(--color-primary); }
+    @media (min-width: 1024px) { .mobile-nav { display: none; } }
+
+    /* =========================================================
+       HERO
+       ========================================================= */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      padding-top: var(--nav-h);
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 20% 30%, oklch(0.88 0.08 30 / 0.45), transparent 60%),
+        radial-gradient(ellipse 50% 60% at 85% 20%, oklch(0.9 0.09 80 / 0.4), transparent 65%),
+        radial-gradient(ellipse 70% 50% at 70% 90%, oklch(0.87 0.07 20 / 0.5), transparent 65%),
+        radial-gradient(ellipse 60% 60% at 10% 80%, oklch(0.92 0.05 60 / 0.45), transparent 60%),
+        linear-gradient(135deg, var(--color-bg), var(--color-surface-2));
+      z-index: -2;
+    }
+    [data-theme="dark"] .hero::before {
+      background:
+        radial-gradient(ellipse 60% 50% at 20% 30%, oklch(0.4 0.07 30 / 0.5), transparent 60%),
+        radial-gradient(ellipse 50% 60% at 85% 20%, oklch(0.35 0.08 80 / 0.4), transparent 65%),
+        radial-gradient(ellipse 70% 50% at 70% 90%, oklch(0.35 0.06 20 / 0.55), transparent 65%),
+        radial-gradient(ellipse 60% 60% at 10% 80%, oklch(0.3 0.04 60 / 0.45), transparent 60%),
+        linear-gradient(135deg, var(--color-bg), #261b18);
+    }
+    .floating-orb {
+      position: absolute;
+      border-radius: var(--radius-full);
+      filter: blur(60px);
+      opacity: 0.6;
+      z-index: -1;
+      pointer-events: none;
+      animation: float 10s ease-in-out infinite;
+    }
+    .floating-orb.orb-1 {
+      width: 260px; height: 260px;
+      background: radial-gradient(circle, var(--color-primary), transparent 70%);
+      top: 12%; left: 8%;
+      animation-duration: 11s;
+    }
+    .floating-orb.orb-2 {
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, var(--color-gold), transparent 70%);
+      top: 55%; right: 5%;
+      animation-duration: 9s;
+      animation-delay: -3s;
+    }
+    .floating-orb.orb-3 {
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, oklch(0.85 0.08 15), transparent 70%);
+      bottom: 12%; left: 35%;
+      animation-duration: 12s;
+      animation-delay: -5s;
+    }
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(20px, -25px) scale(1.05); }
+      66% { transform: translate(-15px, 20px) scale(0.97); }
+    }
+    .hero-inner {
+      max-width: 800px;
+      padding: var(--space-12) 0;
+    }
+    @media (min-width: 1024px) {
+      .hero-inner { margin-left: 4%; }
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: var(--text-xs);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      font-weight: 500;
+      margin-bottom: var(--space-6);
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 36px;
+      height: 1px;
+      background-color: var(--color-primary);
+    }
+    .hero h1 {
+      font-size: var(--text-hero);
+      margin-bottom: var(--space-6);
+      font-weight: 500;
+      font-style: italic;
+    }
+    .hero-sub {
+      font-size: var(--text-lg);
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-8);
+      max-width: 56ch;
+      font-weight: 300;
+    }
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-bottom: var(--space-10);
+    }
+    .hero-tag {
+      display: inline-block;
+      padding: var(--space-2) var(--space-4);
+      background-color: oklch(from var(--color-surface) l c h / 0.7);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      font-size: var(--text-xs);
+      color: var(--color-text);
+      letter-spacing: 0.04em;
+      backdrop-filter: blur(8px);
+    }
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      align-items: center;
+    }
+
+    /* =========================================================
+       ABOUT
+       ========================================================= */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-10);
+      align-items: center;
+    }
+    @media (min-width: 1024px) {
+      .about-grid {
+        grid-template-columns: 1.1fr 1fr;
+        gap: var(--space-16);
+      }
+    }
+    .about-text p { color: var(--color-text-muted); font-size: var(--text-base); }
+    .about-image {
+      width: 100%;
+      aspect-ratio: 5/4;
+      max-width: 500px;
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(ellipse 60% 60% at 30% 30%, oklch(0.88 0.08 30 / 0.6), transparent 70%),
+        radial-gradient(ellipse 60% 60% at 80% 70%, oklch(0.9 0.1 70 / 0.6), transparent 70%),
+        linear-gradient(135deg, var(--color-surface-2), var(--color-surface-offset));
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: var(--space-2);
+      padding: var(--space-8);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+    .about-image::before {
+      content: '';
+      position: absolute;
+      inset: 12px;
+      border: 1px solid oklch(from var(--color-primary) l c h / 0.4);
+      border-radius: calc(var(--radius-xl) - 6px);
+      pointer-events: none;
+    }
+    .about-image-title {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-style: italic;
+      color: var(--color-text);
+    }
+    .about-image-sub {
+      font-size: var(--text-xs);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+    }
+    .about-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+      margin-top: var(--space-12);
+      padding-top: var(--space-10);
+      border-top: 1px solid var(--color-divider);
+    }
+    @media (max-width: 600px) {
+      .about-stats { gap: var(--space-2); }
+    }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 1.4rem + 2vw, 3rem);
+      color: var(--color-primary);
+      font-weight: 500;
+      line-height: 1;
+      display: block;
+    }
+    .stat-label {
+      display: block;
+      margin-top: var(--space-2);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* =========================================================
+       SERVICES — asymmetric grid
+       ========================================================= */
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+    }
+    @media (min-width: 768px) {
+      .services-grid {
+        grid-template-columns: repeat(6, 1fr);
+        grid-auto-rows: minmax(220px, auto);
+      }
+    }
+    .service-card {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-7);
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: oklch(from var(--color-primary) l c h / 0.4);
+    }
+    .service-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle at top right, oklch(from var(--color-primary) l c h / 0.18), transparent 60%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .service-card:hover::after { opacity: 1; }
+    .service-icon {
+      width: 44px;
+      height: 44px;
+      color: var(--color-primary);
+      margin-bottom: var(--space-3);
+    }
+    .service-title {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      color: var(--color-text);
+      margin: 0;
+      font-weight: 500;
+    }
+    .service-desc {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      flex: 1;
+      margin: 0;
+    }
+    @media (min-width: 768px) {
+      .service-card.feat-1 { grid-column: span 4; grid-row: span 2; }
+      .service-card.feat-2 { grid-column: span 2; grid-row: span 2; }
+      .service-card.small  { grid-column: span 3; }
+      .service-card.feat-1 .service-icon { width: 60px; height: 60px; }
+      .service-card.feat-1 .service-title,
+      .service-card.feat-2 .service-title { font-size: var(--text-xl); }
+    }
+    @media (min-width: 1024px) {
+      .service-card.small { grid-column: span 3; }
+    }
+
+    /* =========================================================
+       PRICING
+       ========================================================= */
+    .pricing-header { text-align: center; margin-bottom: var(--space-12); }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+      align-items: stretch;
+    }
+    @media (min-width: 768px) {
+      .pricing-grid { grid-template-columns: repeat(3, 1fr); align-items: center; }
+    }
+    .pricing-card {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-8) var(--space-7);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+      position: relative;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .pricing-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .pricing-card.featured {
+      border: 2px solid var(--color-gold);
+      box-shadow: var(--shadow-md);
+    }
+    @media (min-width: 768px) {
+      .pricing-card.featured { transform: scale(1.04); }
+      .pricing-card.featured:hover { transform: scale(1.04) translateY(-4px); }
+    }
+    .pricing-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--color-gold);
+      color: #2c1f18;
+      padding: var(--space-1) var(--space-4);
+      font-size: var(--text-xs);
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-radius: var(--radius-full);
+      white-space: nowrap;
+    }
+    .pricing-name {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 500;
+      margin: 0;
+      letter-spacing: 0.05em;
+    }
+    .pricing-price {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+      color: var(--color-primary);
+      margin: 0;
+    }
+    .pricing-card.featured .pricing-price { color: var(--color-gold); }
+    .pricing-divider {
+      height: 1px;
+      background-color: var(--color-divider);
+      margin: var(--space-2) 0;
+    }
+    .pricing-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      flex: 1;
+    }
+    .pricing-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+    .pricing-list svg {
+      flex-shrink: 0;
+      color: var(--color-primary);
+      margin-top: 2px;
+    }
+    .pricing-card.featured .pricing-list svg { color: var(--color-gold); }
+
+    /* =========================================================
+       TESTIMONIALS
+       ========================================================= */
+    .reviews-header { text-align: center; margin-bottom: var(--space-12); }
+    .reviews-grid {
+      column-count: 1;
+      column-gap: var(--space-6);
+    }
+    @media (min-width: 768px) {
+      .reviews-grid { column-count: 2; }
+    }
+    .review-card {
+      break-inside: avoid;
+      background-color: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-7);
+      margin-bottom: var(--space-6);
+      box-shadow: var(--shadow-sm);
+      display: inline-block;
+      width: 100%;
+    }
+    .review-stars {
+      display: flex;
+      gap: 2px;
+      color: var(--color-gold);
+      margin-bottom: var(--space-4);
+    }
+    .review-quote {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      line-height: 1.4;
+      color: var(--color-text);
+      margin: 0 0 var(--space-5);
+      font-style: italic;
+      font-weight: 400;
+    }
+    .review-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      font-size: var(--text-sm);
+    }
+    .review-name {
+      color: var(--color-text);
+      font-weight: 500;
+    }
+    .review-source {
+      color: var(--color-text-faint);
+      font-size: var(--text-xs);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .ig-feed {
+      margin-top: var(--space-16);
+      text-align: center;
+    }
+    .ig-feed h3 {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      margin-bottom: var(--space-2);
+    }
+    .ig-feed p {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      margin-bottom: var(--space-8);
+    }
+    .ig-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-3);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    @media (min-width: 640px) {
+      .ig-grid { grid-template-columns: repeat(6, 1fr); }
+    }
+    .ig-tile {
+      aspect-ratio: 1/1;
+      border-radius: var(--radius-md);
+      position: relative;
+      overflow: hidden;
+      transition: transform var(--transition);
+      cursor: pointer;
+    }
+    .ig-tile:hover { transform: scale(1.04); }
+    .ig-tile::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 60%, oklch(0 0 0 / 0.15));
+    }
+    .ig-tile:nth-child(1) { background: linear-gradient(135deg, #f9d6c1, #c8836a); }
+    .ig-tile:nth-child(2) { background: linear-gradient(135deg, #fce4d4, #e8a684); }
+    .ig-tile:nth-child(3) { background: linear-gradient(135deg, #f5dcc6, #c9a84c); }
+    .ig-tile:nth-child(4) { background: linear-gradient(135deg, #fbe6dc, #d99a82); }
+    .ig-tile:nth-child(5) { background: linear-gradient(135deg, #f6d5c2, #b06b54); }
+    .ig-tile:nth-child(6) { background: linear-gradient(135deg, #ffe9da, #c8836a); }
+
+    /* =========================================================
+       BOOKING
+       ========================================================= */
+    .booking {
+      background:
+        radial-gradient(ellipse 50% 60% at 10% 50%, oklch(0.88 0.08 30 / 0.4), transparent 60%),
+        radial-gradient(ellipse 50% 50% at 90% 30%, oklch(0.9 0.07 70 / 0.35), transparent 60%),
+        linear-gradient(135deg, var(--color-surface-2), var(--color-surface-offset));
+      position: relative;
+      overflow: hidden;
+    }
+    [data-theme="dark"] .booking {
+      background:
+        radial-gradient(ellipse 50% 60% at 10% 50%, oklch(0.35 0.07 30 / 0.45), transparent 60%),
+        radial-gradient(ellipse 50% 50% at 90% 30%, oklch(0.35 0.06 70 / 0.4), transparent 60%),
+        linear-gradient(135deg, var(--color-surface-2), var(--color-surface-offset));
+    }
+    .booking-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-10);
+    }
+    @media (min-width: 1024px) {
+      .booking-grid { grid-template-columns: 1fr 1.2fr; gap: var(--space-16); }
+    }
+    .hours-block {
+      margin-top: var(--space-8);
+      padding: var(--space-6);
+      background-color: oklch(from var(--color-surface) l c h / 0.7);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      backdrop-filter: blur(8px);
+    }
+    .hours-block h3 {
+      font-size: var(--text-base);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-family: var(--font-body);
+      font-weight: 500;
+      margin-bottom: var(--space-4);
+      color: var(--color-primary);
+    }
+    .hours-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .hours-list li {
+      display: flex;
+      justify-content: space-between;
+      font-size: var(--text-sm);
+      color: var(--color-text);
+      border-bottom: 1px dashed var(--color-divider);
+      padding-bottom: var(--space-2);
+    }
+    .hours-list li:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .booking-form {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-8);
+      box-shadow: var(--shadow-md);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+    }
+    @media (min-width: 640px) {
+      .booking-form { grid-template-columns: 1fr 1fr; }
+      .booking-form .full { grid-column: span 2; }
+    }
+    .field { display: flex; flex-direction: column; gap: var(--space-2); }
+    .field label {
+      font-size: var(--text-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      font-weight: 500;
+    }
+    .field input, .field select, .field textarea {
+      width: 100%;
+      padding: var(--space-3) var(--space-4);
+      font-family: inherit;
+      font-size: var(--text-sm);
+      color: var(--color-text);
+      background-color: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      transition: border-color var(--transition), box-shadow var(--transition);
+      min-height: 44px;
+    }
+    .field textarea { min-height: 100px; resize: vertical; }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px oklch(from var(--color-primary) l c h / 0.15);
+    }
+    .field.invalid input,
+    .field.invalid select,
+    .field.invalid textarea {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px oklch(from var(--color-primary) l c h / 0.18);
+    }
+    .form-success {
+      grid-column: 1 / -1;
+      display: none;
+      padding: var(--space-5);
+      background-color: oklch(from var(--color-primary) l c h / 0.12);
+      border: 1px solid oklch(from var(--color-primary) l c h / 0.3);
+      border-radius: var(--radius-md);
+      color: var(--color-text);
+      font-size: var(--text-sm);
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .form-success.is-visible { display: flex; }
+    .form-success svg {
+      flex-shrink: 0;
+      color: var(--color-primary);
+      width: 22px; height: 22px;
+    }
+
+    /* =========================================================
+       LOCATION
+       ========================================================= */
+    .location-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-10);
+    }
+    @media (min-width: 1024px) {
+      .location-grid { grid-template-columns: 1fr 1.4fr; gap: var(--space-12); }
+    }
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+    }
+    .contact-item {
+      display: flex;
+      gap: var(--space-4);
+      padding: var(--space-5);
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      transition: transform var(--transition), border-color var(--transition);
+    }
+    .contact-item:hover { border-color: var(--color-primary); transform: translateX(4px); }
+    .contact-item-icon {
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-full);
+      background-color: var(--color-surface-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-primary);
+    }
+    .contact-item-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .contact-item-label {
+      font-size: var(--text-xs);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-text-faint);
+    }
+    .contact-item-value { color: var(--color-text); font-size: var(--text-sm); }
+    .contact-item-value a { color: var(--color-text); }
+    .contact-item-value a:hover { color: var(--color-primary); }
+
+    #map {
+      width: 100%;
+      height: 280px;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      z-index: 0;
+    }
+    @media (min-width: 768px) {
+      #map { height: 400px; }
+    }
+    .leaflet-marker-custom {
+      width: 36px;
+      height: 36px;
+      background-color: var(--color-primary);
+      border: 3px solid var(--color-bg);
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .leaflet-marker-custom::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      background: var(--color-bg);
+      border-radius: 50%;
+    }
+
+    /* =========================================================
+       FOOTER
+       ========================================================= */
+    .footer {
+      background-color: var(--color-surface-2);
+      border-top: 1px solid var(--color-border);
+      padding: var(--space-16) 0 var(--space-6);
+      margin-top: var(--space-12);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-10);
+      margin-bottom: var(--space-10);
+    }
+    @media (min-width: 768px) {
+      .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; gap: var(--space-12); }
+    }
+    .footer h4 {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      margin-bottom: var(--space-5);
+      font-weight: 500;
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-4);
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      color: var(--color-text);
+      font-weight: 500;
+    }
+    .footer-brand svg { color: var(--color-primary); }
+    .footer-tag {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      max-width: 36ch;
+    }
+    .footer-links { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+    .footer-links a {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      transition: color var(--transition);
+    }
+    .footer-links a:hover { color: var(--color-primary); }
+    .footer-social-row { display: flex; gap: var(--space-3); margin-top: var(--space-4); }
+    .footer-social {
+      width: 40px;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-full);
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      color: var(--color-text);
+      transition: background-color var(--transition), color var(--transition), border-color var(--transition);
+    }
+    .footer-social:hover {
+      background-color: var(--color-primary);
+      color: var(--color-text-inverse);
+      border-color: var(--color-primary);
+    }
+    .footer-bottom {
+      border-top: 1px solid var(--color-divider);
+      padding-top: var(--space-6);
+      text-align: center;
+      font-size: var(--text-xs);
+      color: var(--color-text-faint);
+      letter-spacing: 0.05em;
+    }
+
+    /* =========================================================
+       SCROLL REVEAL
+       ========================================================= */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity var(--transition-slow), transform var(--transition-slow);
+      will-change: opacity, transform;
+    }
+    .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+      }
+      .reveal { opacity: 1; transform: none; }
+      .floating-orb { display: none; }
+    }
+
+    /* Leaflet inside dark mode niceties */
+    [data-theme="dark"] .leaflet-tile { filter: brightness(0.85) saturate(0.85); }
+  </style>
+</head>
+<body>
+
+<a href="#main" class="skip-link" data-i18n="skip">Pređi na sadržaj</a>
+
+<!-- =========================================================
+     NAVBAR
+     ========================================================= -->
+<header class="navbar" role="banner">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo" aria-label="Beauty and Life — početna">
+      <!-- B&L lotus monogram -->
+      <svg width="40" height="40" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+        <path d="M30 8 C 22 16 22 26 30 32 C 38 26 38 16 30 8 Z" fill="currentColor" opacity="0.16"/>
+        <path d="M30 14 C 25 20 25 28 30 32 C 35 28 35 20 30 14 Z" fill="currentColor" opacity="0.6"/>
+        <text x="30" y="48" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="20" font-style="italic" font-weight="600" fill="currentColor">B&amp;L</text>
+      </svg>
+      <span class="nav-logo-text">Beauty and Life</span>
+    </a>
+
+    <nav aria-label="Glavna navigacija">
+      <ul class="nav-links">
+        <li><a href="#o-salonu"   data-i18n="nav.about">O salonu</a></li>
+        <li><a href="#usluge"     data-i18n="nav.services">Usluge</a></li>
+        <li><a href="#cenovnik"   data-i18n="nav.pricing">Cenovnik</a></li>
+        <li><a href="#utisci"     data-i18n="nav.reviews">Utisci</a></li>
+        <li><a href="#zakazivanje" data-i18n="nav.book">Zakazivanje</a></li>
+        <li><a href="#lokacija"   data-i18n="nav.location">Lokacija</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-actions">
+      <button type="button" class="lang-toggle" id="lang-toggle"
+              aria-label="Promeni jezik / Change language">
+        <span data-lang-sr class="active">SR</span><span aria-hidden="true">|</span><span data-lang-en>EN</span>
+      </button>
+      <button type="button" class="icon-btn theme-toggle" id="theme-toggle"
+              aria-label="Promeni temu / Toggle theme">
+        <svg class="sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+        </svg>
+        <svg class="moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+      <button type="button" class="hamburger" id="hamburger" aria-label="Otvori meni / Open menu" aria-expanded="false" aria-controls="mobile-nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="mobile-nav" id="mobile-nav" aria-label="Mobilna navigacija">
+  <ul>
+    <li><a href="#o-salonu"    data-i18n="nav.about">O salonu</a></li>
+    <li><a href="#usluge"      data-i18n="nav.services">Usluge</a></li>
+    <li><a href="#cenovnik"    data-i18n="nav.pricing">Cenovnik</a></li>
+    <li><a href="#utisci"      data-i18n="nav.reviews">Utisci</a></li>
+    <li><a href="#zakazivanje" data-i18n="nav.book">Zakazivanje</a></li>
+    <li><a href="#lokacija"    data-i18n="nav.location">Lokacija</a></li>
+  </ul>
+</nav>
+
+<main id="main">
+
+  <!-- =========================================================
+       HERO
+       ========================================================= -->
+  <section class="hero" id="hero" aria-labelledby="hero-title">
+    <div class="floating-orb orb-1" aria-hidden="true"></div>
+    <div class="floating-orb orb-2" aria-hidden="true"></div>
+    <div class="floating-orb orb-3" aria-hidden="true"></div>
+
+    <div class="container">
+      <div class="hero-inner">
+        <span class="hero-eyebrow" data-i18n="hero.eyebrow">Kozmetički salon · Požarevac</span>
+        <h1 id="hero-title" data-i18n="hero.title">Lepota je tvoj poziv</h1>
+        <p class="hero-sub" data-i18n="hero.sub">
+          Personalizovani tretmani lepote i nege, sa preko deset godina iskustva. Mesto gde se opuštanje sreće sa stilom.
+        </p>
+        <div class="hero-tags" role="list">
+          <span class="hero-tag" role="listitem" data-i18n="hero.tag.manikir">Manikir</span>
+          <span class="hero-tag" role="listitem" data-i18n="hero.tag.gel">Gel/Akril</span>
+          <span class="hero-tag" role="listitem" data-i18n="hero.tag.makeup">Šminka</span>
+          <span class="hero-tag" role="listitem" data-i18n="hero.tag.massage">Masaža</span>
+          <span class="hero-tag" role="listitem" data-i18n="hero.tag.solarium">Solarijum</span>
+          <span class="hero-tag" role="listitem" data-i18n="hero.tag.training">Obuke</span>
+        </div>
+        <div class="hero-cta">
+          <a href="#zakazivanje" class="btn btn-primary" data-i18n="hero.cta">Zakaži termin</a>
+          <a href="#usluge" class="btn-ghost-link" data-i18n="hero.cta2">Naše usluge ↓</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       ABOUT
+       ========================================================= -->
+  <section class="section" id="o-salonu" aria-labelledby="about-title">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-text">
+          <span class="section-eyebrow reveal" data-i18n="about.eyebrow">O salonu</span>
+          <h2 id="about-title" class="section-title reveal" data-i18n="about.title">Toplina, posvećenost i preciznost u svakom detalju</h2>
+          <p class="reveal" data-i18n="about.p1">
+            Beauty and Life je kozmetički salon u srcu Požarevca, u TC Evrocentru. Vodi ga Danijela Stojanović — iskusna kozmetičarka koja svaku klijentkinju doživljava kao priču o sebi, sa pažnjom prema detaljima koje druge usluge zaboravljaju.
+          </p>
+          <p class="reveal" data-i18n="about.p2">
+            Naš pristup spaja klasičnu negu lica, savremene tehnike manikira i sigurne tretmane za telo. Verujemo da svaki dolazak treba da bude pauza od svakodnevice — tih ritual koji ostavlja koži, kosi i raspoloženju nešto trajno lepo.
+          </p>
+          <p class="reveal" data-i18n="about.p3">
+            Pored salonske usluge, organizujemo i sertifikovane obuke za buduće kozmetičare. Svaka obuka je mali tim, mnogo prakse i puno individualne pažnje — onako kako bismo i mi voleli da nas neko nauči.
+          </p>
+          <p class="reveal" data-i18n="about.p4">
+            Dođite kod nas — kafa, razgovor i tretman po vašoj meri uvek vas čekaju.
+          </p>
+
+          <div class="about-stats reveal">
+            <div>
+              <span class="stat-num" data-count="10">0</span><span style="font-family:var(--font-display);font-size:1.5rem;color:var(--color-primary);">+</span>
+              <span class="stat-label" data-i18n="about.stat1">godina iskustva</span>
+            </div>
+            <div>
+              <span class="stat-num" data-count="1000">0</span><span style="font-family:var(--font-display);font-size:1.5rem;color:var(--color-primary);">+</span>
+              <span class="stat-label" data-i18n="about.stat2">zadovoljnih klijentkinja</span>
+            </div>
+            <div>
+              <span class="stat-num" data-count="6">0</span>
+              <span class="stat-label" data-i18n="about.stat3">usluga u ponudi</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="about-image reveal" role="img" aria-label="Beauty and Life salon">
+          <span class="about-image-sub" data-i18n="about.imgSub">Kozmetički salon</span>
+          <span class="about-image-title">Beauty <em style="font-style:italic;">&amp;</em> Life</span>
+          <span class="about-image-sub" style="color: var(--color-text-muted);">Požarevac · Stari Korzo 30</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       SERVICES
+       ========================================================= -->
+  <section class="section" id="usluge" style="background-color: var(--color-surface);" aria-labelledby="services-title">
+    <div class="container">
+      <span class="section-eyebrow reveal" data-i18n="services.eyebrow">Naše usluge</span>
+      <h2 id="services-title" class="section-title reveal" data-i18n="services.title">Sve što vam je potrebno na jednom mestu</h2>
+      <p class="section-subtitle reveal" data-i18n="services.sub">
+        Od klasičnog manikira do svadbene šminke i sertifikovanih obuka — paleta usluga koja prati svaki trenutak vašeg dana.
+      </p>
+
+      <div class="services-grid">
+        <article class="service-card feat-1 reveal">
+          <svg class="service-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M16 4c-3 0-5 2-5 5v10c0 3 2 5 5 5s5-2 5-5V9c0-3-2-5-5-5z"/>
+            <path d="M11 14h10"/>
+            <ellipse cx="16" cy="7.5" rx="2.6" ry="1.6" fill="currentColor" opacity="0.18"/>
+            <path d="M16 24v4"/>
+          </svg>
+          <h3 class="service-title" data-i18n="service.s1.title">Manikir &amp; Nokti</h3>
+          <p class="service-desc" data-i18n="service.s1.desc">Gel, akril i prirodni manikir. Dizajn po vašoj želji, dugotrajno i postojano.</p>
+          <a href="#zakazivanje" class="btn-ghost-link" data-i18n="service.more">Saznaj više →</a>
+        </article>
+
+        <article class="service-card feat-2 reveal">
+          <svg class="service-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 18c2-4 6-6 11-6s9 2 11 6"/>
+            <circle cx="16" cy="9" r="3"/>
+            <path d="M9 22c2 1 4 2 7 2s5-1 7-2"/>
+            <path d="M12 26h8"/>
+          </svg>
+          <h3 class="service-title" data-i18n="service.s2.title">Masaža</h3>
+          <p class="service-desc" data-i18n="service.s2.desc">Relaksaciona, sportska i limfna drenaža. Tišina, toplota i ruke koje znaju gde treba.</p>
+          <a href="#zakazivanje" class="btn-ghost-link" data-i18n="service.more">Saznaj više →</a>
+        </article>
+
+        <article class="service-card small reveal">
+          <svg class="service-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M8 8c4 0 6 4 8 4s4-4 8-4v8c-4 0-6 4-8 4s-4-4-8-4z"/>
+            <path d="M16 12v8"/>
+            <circle cx="22" cy="22" r="2.5" fill="currentColor" opacity="0.25"/>
+          </svg>
+          <h3 class="service-title" data-i18n="service.s3.title">Šminka</h3>
+          <p class="service-desc" data-i18n="service.s3.desc">Svakodnevna, svadbena i prom šminka. Lepota koja izgleda kao vi — samo bolji dan.</p>
+          <a href="#zakazivanje" class="btn-ghost-link" data-i18n="service.more">Saznaj više →</a>
+        </article>
+
+        <article class="service-card small reveal">
+          <svg class="service-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="16" cy="16" r="5"/>
+            <path d="M16 3v3M16 26v3M3 16h3M26 16h3M6.5 6.5l2 2M23.5 23.5l-2-2M6.5 25.5l2-2M23.5 8.5l-2 2"/>
+          </svg>
+          <h3 class="service-title" data-i18n="service.s4.title">Solarijum</h3>
+          <p class="service-desc" data-i18n="service.s4.desc">Moderne UV kabine, bezbedna preplanulost. Sjaj koža bez čekanja na leto.</p>
+          <a href="#zakazivanje" class="btn-ghost-link" data-i18n="service.more">Saznaj više →</a>
+        </article>
+
+        <article class="service-card small reveal">
+          <svg class="service-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M16 4C10 8 8 14 8 18c0 5 4 8 8 8s8-3 8-8c0-4-2-10-8-14z"/>
+            <path d="M16 14c-2 2-3 4-3 6"/>
+          </svg>
+          <h3 class="service-title" data-i18n="service.s5.title">Nega kože</h3>
+          <p class="service-desc" data-i18n="service.s5.desc">Tretmani lica i dubinsko čišćenje. Koža koja diše i bolje upija dnevnu negu.</p>
+          <a href="#zakazivanje" class="btn-ghost-link" data-i18n="service.more">Saznaj više →</a>
+        </article>
+
+        <article class="service-card small reveal">
+          <svg class="service-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 7h16v18H8a2 2 0 0 1-2-2V7z"/>
+            <path d="M6 7a2 2 0 0 1 2-2h14"/>
+            <path d="M11 12h8M11 16h8M11 20h5"/>
+          </svg>
+          <h3 class="service-title" data-i18n="service.s6.title">Obuke</h3>
+          <p class="service-desc" data-i18n="service.s6.desc">Kursevi i sertifikati za kozmetičare. Mali timovi, mnogo prakse, brz ulazak u struku.</p>
+          <a href="#zakazivanje" class="btn-ghost-link" data-i18n="service.more">Saznaj više →</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       PRICING
+       ========================================================= -->
+  <section class="section" id="cenovnik" aria-labelledby="pricing-title">
+    <div class="container">
+      <div class="pricing-header">
+        <span class="section-eyebrow reveal" data-i18n="pricing.eyebrow">Cenovnik</span>
+        <h2 id="pricing-title" class="section-title reveal" data-i18n="pricing.title">Paketi po meri vašeg dana</h2>
+        <p class="section-subtitle reveal" style="margin-left:auto;margin-right:auto;" data-i18n="pricing.sub">
+          Izaberite paket koji vam odgovara ili kontaktirajte salon za personalizovanu ponudu.
+        </p>
+      </div>
+
+      <div class="pricing-grid">
+        <article class="pricing-card reveal" aria-labelledby="p-basic">
+          <h3 id="p-basic" class="pricing-name" data-i18n="pricing.basic.name">Basic</h3>
+          <p class="pricing-price" data-i18n="pricing.basic.price">od 800 RSD</p>
+          <div class="pricing-divider"></div>
+          <ul class="pricing-list">
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.basic.f1">Manikir</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.basic.f2">Pedikir</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.basic.f3">Šminka (osnovna)</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.basic.f4">Solarijum (1 min)</span></li>
+          </ul>
+          <a href="#zakazivanje" class="btn btn-secondary" data-i18n="pricing.cta">Zakaži</a>
+        </article>
+
+        <article class="pricing-card featured reveal" aria-labelledby="p-premium">
+          <span class="pricing-badge" data-i18n="pricing.popular">Najpopularnije</span>
+          <h3 id="p-premium" class="pricing-name" data-i18n="pricing.premium.name">Premium</h3>
+          <p class="pricing-price" data-i18n="pricing.premium.price">od 2.500 RSD</p>
+          <div class="pricing-divider"></div>
+          <ul class="pricing-list">
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.premium.f1">Gel/akril nokti</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.premium.f2">Relaksaciona masaža (60min)</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.premium.f3">Šminka (kompletna)</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.premium.f4">Nega lica</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.premium.f5">Solarijum (3 min)</span></li>
+          </ul>
+          <a href="#zakazivanje" class="btn btn-gold" data-i18n="pricing.cta">Zakaži</a>
+        </article>
+
+        <article class="pricing-card reveal" aria-labelledby="p-vip">
+          <h3 id="p-vip" class="pricing-name" data-i18n="pricing.vip.name">VIP</h3>
+          <p class="pricing-price" data-i18n="pricing.vip.price">od 5.000 RSD</p>
+          <div class="pricing-divider"></div>
+          <ul class="pricing-list">
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.vip.f1">Kompletan manikir + pedikir</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.vip.f2">Masaža po izboru (90min)</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.vip.f3">Svadbena šminka</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.vip.f4">Tretman lica (premium)</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.vip.f5">Solarijum neograničeno</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="pricing.vip.f6">Besplatna obuka (1 dan)</span></li>
+          </ul>
+          <a href="#zakazivanje" class="btn btn-secondary" data-i18n="pricing.cta">Zakaži</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       REVIEWS
+       ========================================================= -->
+  <section class="section" id="utisci" style="background-color: var(--color-surface);" aria-labelledby="reviews-title">
+    <div class="container">
+      <div class="reviews-header">
+        <span class="section-eyebrow reveal" data-i18n="reviews.eyebrow">Utisci</span>
+        <h2 id="reviews-title" class="section-title reveal" data-i18n="reviews.title">Šta kažu naše klijentkinje</h2>
+        <p class="section-subtitle reveal" style="margin-left:auto;margin-right:auto;" data-i18n="reviews.sub">
+          Iskreni utisci sa Instagrama, Facebooka i Googlea — najlepša preporuka su zadovoljne klijentkinje.
+        </p>
+      </div>
+
+      <div class="reviews-grid" id="reviews-grid">
+        <!-- Cards generated by JS for clean i18n re-render -->
+      </div>
+
+      <div class="ig-feed reveal">
+        <h3 data-i18n="ig.title">Pratite nas na Instagramu</h3>
+        <p data-i18n="ig.handle">@danijela_beauty_and_life</p>
+        <div class="ig-grid">
+          <a class="ig-tile" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 1"></a>
+          <a class="ig-tile" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 2"></a>
+          <a class="ig-tile" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 3"></a>
+          <a class="ig-tile" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 4"></a>
+          <a class="ig-tile" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 5"></a>
+          <a class="ig-tile" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 6"></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       BOOKING
+       ========================================================= -->
+  <section class="section booking" id="zakazivanje" aria-labelledby="booking-title">
+    <div class="container">
+      <div class="booking-grid">
+        <div>
+          <span class="section-eyebrow reveal" data-i18n="book.eyebrow">Zakazivanje</span>
+          <h2 id="booking-title" class="section-title reveal" data-i18n="book.title">Rezervišite termin za vaš trenutak</h2>
+          <p class="reveal" style="color:var(--color-text-muted);" data-i18n="book.sub">
+            Popunite kratki obrazac i Danijela će vas kontaktirati radi potvrde termina. Ili nas pozovite direktno na <a href="tel:+381652808026">065 2808026</a>.
+          </p>
+
+          <div class="hours-block reveal">
+            <h3 data-i18n="hours.title">Radno vreme</h3>
+            <ul class="hours-list">
+              <li><span data-i18n="hours.weekdays">Pon–Pet</span><span>09:00–20:00</span></li>
+              <li><span data-i18n="hours.saturday">Subota</span><span>09:00–16:00</span></li>
+              <li><span data-i18n="hours.sunday">Nedelja</span><span data-i18n="hours.closed">zatvoreno</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <form class="booking-form reveal" id="booking-form" novalidate aria-label="Forma za zakazivanje">
+          <div class="field full">
+            <label for="f-name" data-i18n="form.name">Ime i prezime</label>
+            <input id="f-name" type="text" required autocomplete="name" data-i18n-ph="form.name.ph" placeholder="Vaše ime i prezime"/>
+          </div>
+          <div class="field">
+            <label for="f-phone" data-i18n="form.phone">Telefon</label>
+            <input id="f-phone" type="tel" required autocomplete="tel" data-i18n-ph="form.phone.ph" placeholder="065 123 4567"/>
+          </div>
+          <div class="field">
+            <label for="f-email" data-i18n="form.email">Email (opciono)</label>
+            <input id="f-email" type="email" autocomplete="email" placeholder="vas@email.com"/>
+          </div>
+          <div class="field">
+            <label for="f-service" data-i18n="form.service">Usluga</label>
+            <select id="f-service" required>
+              <option value="" disabled selected data-i18n="form.service.ph">Izaberite uslugu</option>
+              <option value="manikir"    data-i18n="form.service.opt1">Manikir &amp; Nokti</option>
+              <option value="masaza"     data-i18n="form.service.opt2">Masaža</option>
+              <option value="sminka"     data-i18n="form.service.opt3">Šminka</option>
+              <option value="solarijum"  data-i18n="form.service.opt4">Solarijum</option>
+              <option value="nega"       data-i18n="form.service.opt5">Nega kože</option>
+              <option value="obuka"      data-i18n="form.service.opt6">Obuke</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-date" data-i18n="form.date">Datum</label>
+            <input id="f-date" type="date" required />
+          </div>
+          <div class="field">
+            <label for="f-time" data-i18n="form.time">Vreme</label>
+            <input id="f-time" type="time" required />
+          </div>
+          <div class="field full">
+            <label for="f-note" data-i18n="form.note">Napomena</label>
+            <textarea id="f-note" data-i18n-ph="form.note.ph" placeholder="Bilo koja dodatna napomena za Danijelu..."></textarea>
+          </div>
+          <div class="full">
+            <button type="submit" class="btn btn-primary" style="width:100%;" data-i18n="form.submit">Pošalji zahtev</button>
+          </div>
+          <div class="form-success" id="form-success" role="status" aria-live="polite">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span data-i18n="form.success">Vaš zahtev je uspešno poslat. Danijela će vas kontaktirati u najkraćem roku.</span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       LOCATION
+       ========================================================= -->
+  <section class="section" id="lokacija" aria-labelledby="location-title">
+    <div class="container">
+      <span class="section-eyebrow reveal" data-i18n="loc.eyebrow">Lokacija &amp; Kontakt</span>
+      <h2 id="location-title" class="section-title reveal" data-i18n="loc.title">Posetite nas u centru Požarevca</h2>
+      <p class="section-subtitle reveal" data-i18n="loc.sub">
+        Lako dostupna lokacija u TC Evrocentar — parking u neposrednoj blizini.
+      </p>
+
+      <div class="location-grid">
+        <div class="contact-info reveal">
+          <div class="contact-item">
+            <div class="contact-item-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div class="contact-item-text">
+              <span class="contact-item-label" data-i18n="loc.address">Adresa</span>
+              <span class="contact-item-value">Stari Korzo 30<br/>TC Evrocentar, I sprat lokal 08<br/>Požarevac 12000, Srbija</span>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-item-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+            <div class="contact-item-text">
+              <span class="contact-item-label" data-i18n="loc.phone">Telefon</span>
+              <span class="contact-item-value"><a href="tel:+381652808026">065 2808026</a></span>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-item-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+            </div>
+            <div class="contact-item-text">
+              <span class="contact-item-label" data-i18n="loc.ig">Instagram</span>
+              <span class="contact-item-value"><a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">@danijela_beauty_and_life</a></span>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-item-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </div>
+            <div class="contact-item-text">
+              <span class="contact-item-label" data-i18n="loc.fb">Facebook</span>
+              <span class="contact-item-value"><a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">Beauty and Life Salon</a></span>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-item-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>
+            </div>
+            <div class="contact-item-text">
+              <span class="contact-item-label">WhatsApp</span>
+              <span class="contact-item-value"><a href="https://wa.me/381652808026" target="_blank" rel="noopener noreferrer" data-i18n="loc.wa.send">Pošalji poruku</a></span>
+            </div>
+          </div>
+        </div>
+
+        <div id="map" class="reveal" role="region" aria-label="Mapa lokacije salona"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <svg width="36" height="36" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+            <path d="M30 8 C 22 16 22 26 30 32 C 38 26 38 16 30 8 Z" fill="currentColor" opacity="0.16"/>
+            <path d="M30 14 C 25 20 25 28 30 32 C 35 28 35 20 30 14 Z" fill="currentColor" opacity="0.6"/>
+            <text x="30" y="48" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="20" font-style="italic" font-weight="600" fill="currentColor">B&amp;L</text>
+          </svg>
+          <span>Beauty and Life</span>
+        </div>
+        <p class="footer-tag" data-i18n="footer.tag">
+          Kozmetički salon Danijele Stojanović — toplina, posvećenost i preciznost u svakom detalju, u srcu Požarevca.
+        </p>
+        <div class="footer-social-row">
+          <a class="footer-social" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+          </a>
+          <a class="footer-social" href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a class="footer-social" href="https://wa.me/381652808026" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <h4 data-i18n="footer.links">Brzi linkovi</h4>
+        <ul class="footer-links">
+          <li><a href="#o-salonu"    data-i18n="nav.about">O salonu</a></li>
+          <li><a href="#usluge"      data-i18n="nav.services">Usluge</a></li>
+          <li><a href="#cenovnik"    data-i18n="nav.pricing">Cenovnik</a></li>
+          <li><a href="#utisci"      data-i18n="nav.reviews">Utisci</a></li>
+          <li><a href="#zakazivanje" data-i18n="nav.book">Zakazivanje</a></li>
+          <li><a href="#lokacija"    data-i18n="nav.location">Lokacija</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 data-i18n="footer.contact">Kontakt</h4>
+        <ul class="footer-links">
+          <li>Stari Korzo 30</li>
+          <li>TC Evrocentar, I sprat lokal 08</li>
+          <li>Požarevac 12000</li>
+          <li><a href="tel:+381652808026">065 2808026</a></li>
+          <li><a href="https://wa.me/381652808026" target="_blank" rel="noopener noreferrer">WhatsApp</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span data-i18n="footer.copy">© 2025 Beauty and Life. Sva prava zadržana.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin="" defer></script>
+
+<script defer>
+'use strict';
+
+/* =========================================================
+   I18N
+   ========================================================= */
+const i18n = {
+  sr: {
+    'skip': 'Pređi na sadržaj',
+    'nav.about':    'O salonu',
+    'nav.services': 'Usluge',
+    'nav.pricing':  'Cenovnik',
+    'nav.reviews':  'Utisci',
+    'nav.book':     'Zakazivanje',
+    'nav.location': 'Lokacija',
+
+    'hero.eyebrow':      'Kozmetički salon · Požarevac',
+    'hero.title':        'Lepota je tvoj poziv',
+    'hero.sub':          'Personalizovani tretmani lepote i nege, sa preko deset godina iskustva. Mesto gde se opuštanje sreće sa stilom.',
+    'hero.tag.manikir':  'Manikir',
+    'hero.tag.gel':      'Gel/Akril',
+    'hero.tag.makeup':   'Šminka',
+    'hero.tag.massage':  'Masaža',
+    'hero.tag.solarium': 'Solarijum',
+    'hero.tag.training': 'Obuke',
+    'hero.cta':          'Zakaži termin',
+    'hero.cta2':         'Naše usluge ↓',
+
+    'about.eyebrow': 'O salonu',
+    'about.title':   'Toplina, posvećenost i preciznost u svakom detalju',
+    'about.p1':      'Beauty and Life je kozmetički salon u srcu Požarevca, u TC Evrocentru. Vodi ga Danijela Stojanović — iskusna kozmetičarka koja svaku klijentkinju doživljava kao priču o sebi, sa pažnjom prema detaljima koje druge usluge zaboravljaju.',
+    'about.p2':      'Naš pristup spaja klasičnu negu lica, savremene tehnike manikira i sigurne tretmane za telo. Verujemo da svaki dolazak treba da bude pauza od svakodnevice — tih ritual koji ostavlja koži, kosi i raspoloženju nešto trajno lepo.',
+    'about.p3':      'Pored salonske usluge, organizujemo i sertifikovane obuke za buduće kozmetičare. Svaka obuka je mali tim, mnogo prakse i puno individualne pažnje — onako kako bismo i mi voleli da nas neko nauči.',
+    'about.p4':      'Dođite kod nas — kafa, razgovor i tretman po vašoj meri uvek vas čekaju.',
+    'about.stat1':   'godina iskustva',
+    'about.stat2':   'zadovoljnih klijentkinja',
+    'about.stat3':   'usluga u ponudi',
+    'about.imgSub':  'Kozmetički salon',
+
+    'services.eyebrow': 'Naše usluge',
+    'services.title':   'Sve što vam je potrebno na jednom mestu',
+    'services.sub':     'Od klasičnog manikira do svadbene šminke i sertifikovanih obuka — paleta usluga koja prati svaki trenutak vašeg dana.',
+    'service.more':     'Saznaj više →',
+    'service.s1.title': 'Manikir & Nokti',
+    'service.s1.desc':  'Gel, akril i prirodni manikir. Dizajn po vašoj želji, dugotrajno i postojano.',
+    'service.s2.title': 'Masaža',
+    'service.s2.desc':  'Relaksaciona, sportska i limfna drenaža. Tišina, toplota i ruke koje znaju gde treba.',
+    'service.s3.title': 'Šminka',
+    'service.s3.desc':  'Svakodnevna, svadbena i prom šminka. Lepota koja izgleda kao vi — samo bolji dan.',
+    'service.s4.title': 'Solarijum',
+    'service.s4.desc':  'Moderne UV kabine, bezbedna preplanulost. Sjajna koža bez čekanja na leto.',
+    'service.s5.title': 'Nega kože',
+    'service.s5.desc':  'Tretmani lica i dubinsko čišćenje. Koža koja diše i bolje upija dnevnu negu.',
+    'service.s6.title': 'Obuke',
+    'service.s6.desc':  'Kursevi i sertifikati za kozmetičare. Mali timovi, mnogo prakse, brz ulazak u struku.',
+
+    'pricing.eyebrow':       'Cenovnik',
+    'pricing.title':         'Paketi po meri vašeg dana',
+    'pricing.sub':           'Izaberite paket koji vam odgovara ili kontaktirajte salon za personalizovanu ponudu.',
+    'pricing.popular':       'Najpopularnije',
+    'pricing.cta':           'Zakaži',
+    'pricing.basic.name':    'Basic',
+    'pricing.basic.price':   'od 800 RSD',
+    'pricing.basic.f1':      'Manikir',
+    'pricing.basic.f2':      'Pedikir',
+    'pricing.basic.f3':      'Šminka (osnovna)',
+    'pricing.basic.f4':      'Solarijum (1 min)',
+    'pricing.premium.name':  'Premium',
+    'pricing.premium.price': 'od 2.500 RSD',
+    'pricing.premium.f1':    'Gel/akril nokti',
+    'pricing.premium.f2':    'Relaksaciona masaža (60min)',
+    'pricing.premium.f3':    'Šminka (kompletna)',
+    'pricing.premium.f4':    'Nega lica',
+    'pricing.premium.f5':    'Solarijum (3 min)',
+    'pricing.vip.name':      'VIP',
+    'pricing.vip.price':     'od 5.000 RSD',
+    'pricing.vip.f1':        'Kompletan manikir + pedikir',
+    'pricing.vip.f2':        'Masaža po izboru (90min)',
+    'pricing.vip.f3':        'Svadbena šminka',
+    'pricing.vip.f4':        'Tretman lica (premium)',
+    'pricing.vip.f5':        'Solarijum neograničeno',
+    'pricing.vip.f6':        'Besplatna obuka (1 dan)',
+
+    'reviews.eyebrow': 'Utisci',
+    'reviews.title':   'Šta kažu naše klijentkinje',
+    'reviews.sub':     'Iskreni utisci sa Instagrama, Facebooka i Googlea — najlepša preporuka su zadovoljne klijentkinje.',
+    'ig.title':        'Pratite nas na Instagramu',
+    'ig.handle':       '@danijela_beauty_and_life',
+
+    'book.eyebrow': 'Zakazivanje',
+    'book.title':   'Rezervišite termin za vaš trenutak',
+    'book.sub':     'Popunite kratki obrazac i Danijela će vas kontaktirati radi potvrde termina. Ili nas pozovite direktno na <a href="tel:+381652808026">065 2808026</a>.',
+    'hours.title':  'Radno vreme',
+    'hours.weekdays': 'Pon–Pet',
+    'hours.saturday': 'Subota',
+    'hours.sunday':   'Nedelja',
+    'hours.closed':   'zatvoreno',
+
+    'form.name':         'Ime i prezime',
+    'form.name.ph':      'Vaše ime i prezime',
+    'form.phone':        'Telefon',
+    'form.phone.ph':     '065 123 4567',
+    'form.email':        'Email (opciono)',
+    'form.service':      'Usluga',
+    'form.service.ph':   'Izaberite uslugu',
+    'form.service.opt1': 'Manikir & Nokti',
+    'form.service.opt2': 'Masaža',
+    'form.service.opt3': 'Šminka',
+    'form.service.opt4': 'Solarijum',
+    'form.service.opt5': 'Nega kože',
+    'form.service.opt6': 'Obuke',
+    'form.date':         'Datum',
+    'form.time':         'Vreme',
+    'form.note':         'Napomena',
+    'form.note.ph':      'Bilo koja dodatna napomena za Danijelu...',
+    'form.submit':       'Pošalji zahtev',
+    'form.success':      'Vaš zahtev je uspešno poslat. Danijela će vas kontaktirati u najkraćem roku.',
+
+    'loc.eyebrow':  'Lokacija & Kontakt',
+    'loc.title':    'Posetite nas u centru Požarevca',
+    'loc.sub':      'Lako dostupna lokacija u TC Evrocentar — parking u neposrednoj blizini.',
+    'loc.address':  'Adresa',
+    'loc.phone':    'Telefon',
+    'loc.ig':       'Instagram',
+    'loc.fb':       'Facebook',
+    'loc.wa.send':  'Pošalji poruku',
+
+    'footer.tag':     'Kozmetički salon Danijele Stojanović — toplina, posvećenost i preciznost u svakom detalju, u srcu Požarevca.',
+    'footer.links':   'Brzi linkovi',
+    'footer.contact': 'Kontakt',
+    'footer.copy':    '© 2025 Beauty and Life. Sva prava zadržana.',
+
+    'reviews.list': [
+      { quote: 'Danijela je apsolutna profesionalka. Gel nokti su savršeni već mesecima!', name: 'Milica S.', source: 'Instagram' },
+      { quote: 'Solarijum je vrhunski, osoblje je ljubazno i profesionalno. Preporučujem svima!', name: 'Ana K.', source: 'Facebook' },
+      { quote: 'Masaža je bila fantastična, osećala sam se kao nova osoba. Obavezno se vraćam.', name: 'Jovana M.', source: 'Google' },
+      { quote: 'Šminka za venčanje je bila tačno onakva kakvu sam zamislila. Hvala Danijela!', name: 'Maja T.', source: 'Facebook' },
+      { quote: 'Kurs za kozmetičare je bio izvanredan — naučila sam više nego za godinu dana prakse.', name: 'Tamara N.', source: 'Instagram' },
+      { quote: 'Svaki put dođem i odem prezadovoljna. Beauty and Life je pravi izbor!', name: 'Aleksandra R.', source: 'Instagram' }
+    ]
+  },
+
+  en: {
+    'skip': 'Skip to content',
+    'nav.about':    'About',
+    'nav.services': 'Services',
+    'nav.pricing':  'Pricing',
+    'nav.reviews':  'Reviews',
+    'nav.book':     'Book',
+    'nav.location': 'Location',
+
+    'hero.eyebrow':      'Beauty salon · Požarevac',
+    'hero.title':        'Beauty is your calling',
+    'hero.sub':          'Personalised beauty and wellness treatments, with over a decade of experience. Where relaxation meets style.',
+    'hero.tag.manikir':  'Manicure',
+    'hero.tag.gel':      'Gel/Acrylic',
+    'hero.tag.makeup':   'Makeup',
+    'hero.tag.massage':  'Massage',
+    'hero.tag.solarium': 'Solarium',
+    'hero.tag.training': 'Training',
+    'hero.cta':          'Book appointment',
+    'hero.cta2':         'Our services ↓',
+
+    'about.eyebrow': 'About the salon',
+    'about.title':   'Warmth, dedication and precision in every detail',
+    'about.p1':      'Beauty and Life is a beauty salon in the heart of Požarevac, located in TC Evrocentar. It is led by Danijela Stojanović — an experienced cosmetician who treats every client as a story of her own, with attention to the small details other services overlook.',
+    'about.p2':      'Our approach combines classic facial care, modern manicure techniques and safe body treatments. Every visit should be a pause from the everyday — a quiet ritual that leaves your skin, hair and mood with something lasting and beautiful.',
+    'about.p3':      'Alongside salon services, we host certified training courses for future cosmeticians. Each course is a small team, lots of practice and personal attention — the way we would have wanted to be taught.',
+    'about.p4':      'Come visit us — coffee, a chat and a tailored treatment are always waiting for you.',
+    'about.stat1':   'years of experience',
+    'about.stat2':   'happy clients',
+    'about.stat3':   'services offered',
+    'about.imgSub':  'Beauty salon',
+
+    'services.eyebrow': 'Our services',
+    'services.title':   'Everything you need, in one place',
+    'services.sub':     'From classic manicure to bridal makeup and certified training — a palette of services for every moment of your day.',
+    'service.more':     'Learn more →',
+    'service.s1.title': 'Manicure & Nails',
+    'service.s1.desc':  'Gel, acrylic and natural manicure. Designs to your taste — lasting, polished, and precise.',
+    'service.s2.title': 'Massage',
+    'service.s2.desc':  'Relaxation, sports and lymphatic drainage. Silence, warmth, and hands that know just where to press.',
+    'service.s3.title': 'Makeup',
+    'service.s3.desc':  'Everyday, bridal and prom makeup. Beauty that looks like you — only on a better day.',
+    'service.s4.title': 'Solarium',
+    'service.s4.desc':  'Modern UV booths and safe tanning. Glowing skin — no waiting for summer.',
+    'service.s5.title': 'Skin care',
+    'service.s5.desc':  'Facial treatments and deep cleansing. Skin that breathes and absorbs your daily care better.',
+    'service.s6.title': 'Training',
+    'service.s6.desc':  'Courses and certificates for cosmeticians. Small groups, plenty of practice, a fast start in the profession.',
+
+    'pricing.eyebrow':       'Pricing',
+    'pricing.title':         'Packages tailored to your day',
+    'pricing.sub':           'Choose the package that fits you, or contact the salon for a personalised offer.',
+    'pricing.popular':       'Most Popular',
+    'pricing.cta':           'Book',
+    'pricing.basic.name':    'Basic',
+    'pricing.basic.price':   'from 800 RSD',
+    'pricing.basic.f1':      'Manicure',
+    'pricing.basic.f2':      'Pedicure',
+    'pricing.basic.f3':      'Makeup (basic)',
+    'pricing.basic.f4':      'Solarium (1 min)',
+    'pricing.premium.name':  'Premium',
+    'pricing.premium.price': 'from 2,500 RSD',
+    'pricing.premium.f1':    'Gel/acrylic nails',
+    'pricing.premium.f2':    'Relaxation massage (60min)',
+    'pricing.premium.f3':    'Makeup (complete)',
+    'pricing.premium.f4':    'Facial care',
+    'pricing.premium.f5':    'Solarium (3 min)',
+    'pricing.vip.name':      'VIP',
+    'pricing.vip.price':     'from 5,000 RSD',
+    'pricing.vip.f1':        'Full manicure + pedicure',
+    'pricing.vip.f2':        'Massage of choice (90min)',
+    'pricing.vip.f3':        'Bridal makeup',
+    'pricing.vip.f4':        'Facial treatment (premium)',
+    'pricing.vip.f5':        'Unlimited solarium',
+    'pricing.vip.f6':        'Free training day (1 day)',
+
+    'reviews.eyebrow': 'Reviews',
+    'reviews.title':   'What our clients say',
+    'reviews.sub':     'Honest reviews from Instagram, Facebook and Google — the loveliest recommendation is a happy client.',
+    'ig.title':        'Follow us on Instagram',
+    'ig.handle':       '@danijela_beauty_and_life',
+
+    'book.eyebrow': 'Booking',
+    'book.title':   'Reserve a time for your moment',
+    'book.sub':     'Fill out the short form and Danijela will contact you to confirm your appointment. Or call us directly on <a href="tel:+381652808026">065 2808026</a>.',
+    'hours.title':  'Working hours',
+    'hours.weekdays': 'Mon–Fri',
+    'hours.saturday': 'Saturday',
+    'hours.sunday':   'Sunday',
+    'hours.closed':   'closed',
+
+    'form.name':         'Full name',
+    'form.name.ph':      'Your full name',
+    'form.phone':        'Phone',
+    'form.phone.ph':     '+381 65 123 4567',
+    'form.email':        'Email (optional)',
+    'form.service':      'Service',
+    'form.service.ph':   'Select a service',
+    'form.service.opt1': 'Manicure & Nails',
+    'form.service.opt2': 'Massage',
+    'form.service.opt3': 'Makeup',
+    'form.service.opt4': 'Solarium',
+    'form.service.opt5': 'Skin care',
+    'form.service.opt6': 'Training',
+    'form.date':         'Date',
+    'form.time':         'Time',
+    'form.note':         'Note',
+    'form.note.ph':      'Any additional notes for Danijela...',
+    'form.submit':       'Send request',
+    'form.success':      'Your request has been sent successfully. Danijela will contact you as soon as possible.',
+
+    'loc.eyebrow':  'Location & Contact',
+    'loc.title':    'Visit us in the centre of Požarevac',
+    'loc.sub':      'Easy to reach in TC Evrocentar — parking right nearby.',
+    'loc.address':  'Address',
+    'loc.phone':    'Phone',
+    'loc.ig':       'Instagram',
+    'loc.fb':       'Facebook',
+    'loc.wa.send':  'Send a message',
+
+    'footer.tag':     "Danijela Stojanović's beauty salon — warmth, dedication and precision in every detail, in the heart of Požarevac.",
+    'footer.links':   'Quick links',
+    'footer.contact': 'Contact',
+    'footer.copy':    '© 2025 Beauty and Life. All rights reserved.',
+
+    'reviews.list': [
+      { quote: 'Danijela is an absolute professional. My gel nails have been perfect for months!', name: 'Milica S.', source: 'Instagram' },
+      { quote: 'The solarium is top-notch, the staff is kind and professional. I recommend it to everyone!', name: 'Ana K.', source: 'Facebook' },
+      { quote: 'The massage was fantastic, I felt like a new person. I will definitely be back.', name: 'Jovana M.', source: 'Google' },
+      { quote: 'My wedding makeup was exactly what I had imagined. Thank you, Danijela!', name: 'Maja T.', source: 'Facebook' },
+      { quote: 'The course for cosmeticians was outstanding — I learned more than in a year of practice.', name: 'Tamara N.', source: 'Instagram' },
+      { quote: 'Every visit I leave feeling delighted. Beauty and Life is the right choice!', name: 'Aleksandra R.', source: 'Instagram' }
+    ]
+  }
+};
+
+let currentLang = 'sr';
+
+function t(key) {
+  return (i18n[currentLang] && i18n[currentLang][key]) || key;
+}
+
+function renderReviews() {
+  const grid = document.getElementById('reviews-grid');
+  if (!grid) return;
+  const list = i18n[currentLang]['reviews.list'] || [];
+  const star = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>';
+  grid.innerHTML = list.map((r, i) => `
+    <article class="review-card reveal" style="transition-delay:${i * 80}ms;">
+      <div class="review-stars" aria-label="5 / 5">${star.repeat(5)}</div>
+      <p class="review-quote">&ldquo;${r.quote}&rdquo;</p>
+      <div class="review-meta">
+        <span class="review-name">${r.name}</span>
+        <span class="review-source">${r.source}</span>
+      </div>
+    </article>
+  `).join('');
+  // Reveal review cards immediately if they enter viewport
+  observeReveals(grid.querySelectorAll('.reveal'));
+}
+
+function applyI18n() {
+  document.documentElement.lang = currentLang;
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const val = t(key);
+    if (val) {
+      if (/<[a-z]/i.test(val)) el.innerHTML = val;
+      else el.textContent = val;
+    }
+  });
+
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const key = el.getAttribute('data-i18n-ph');
+    const val = t(key);
+    if (val) el.setAttribute('placeholder', val);
+  });
+
+  const langToggle = document.getElementById('lang-toggle');
+  if (langToggle) {
+    const sr = langToggle.querySelector('[data-lang-sr]');
+    const en = langToggle.querySelector('[data-lang-en]');
+    if (sr && en) {
+      sr.classList.toggle('active', currentLang === 'sr');
+      en.classList.toggle('active', currentLang === 'en');
+    }
+  }
+
+  renderReviews();
+}
+
+/* =========================================================
+   THEME
+   ========================================================= */
+let currentTheme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', currentTheme);
+}
+function toggleTheme() {
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  applyTheme();
+}
+
+/* =========================================================
+   MOBILE NAV
+   ========================================================= */
+function setupMobileNav() {
+  const burger = document.getElementById('hamburger');
+  const mobile = document.getElementById('mobile-nav');
+  if (!burger || !mobile) return;
+
+  function close() {
+    burger.classList.remove('is-open');
+    mobile.classList.remove('is-open');
+    burger.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+  function open() {
+    burger.classList.add('is-open');
+    mobile.classList.add('is-open');
+    burger.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+
+  burger.addEventListener('click', () => {
+    if (mobile.classList.contains('is-open')) close();
+    else open();
+  });
+
+  mobile.querySelectorAll('a').forEach(a => a.addEventListener('click', close));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobile.classList.contains('is-open')) close();
+  });
+}
+
+/* =========================================================
+   SCROLL REVEAL
+   ========================================================= */
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let revealObserver = null;
+function ensureObserver() {
+  if (revealObserver) return revealObserver;
+  revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+  return revealObserver;
+}
+function observeReveals(nodes) {
+  if (reducedMotion) {
+    nodes.forEach(n => n.classList.add('is-visible'));
+    return;
+  }
+  const obs = ensureObserver();
+  nodes.forEach((node, idx) => {
+    if (!node.style.transitionDelay) {
+      const parent = node.parentElement;
+      const siblings = parent ? Array.from(parent.children).filter(c => c.classList.contains('reveal')) : [];
+      const i = siblings.indexOf(node);
+      if (i >= 0 && siblings.length > 1) {
+        node.style.transitionDelay = `${i * 80}ms`;
+      }
+    }
+    obs.observe(node);
+  });
+}
+
+/* =========================================================
+   COUNTERS
+   ========================================================= */
+function setupCounters() {
+  const counters = document.querySelectorAll('[data-count]');
+  if (!counters.length) return;
+  const animateOne = (el) => {
+    const target = parseInt(el.getAttribute('data-count'), 10) || 0;
+    if (reducedMotion) { el.textContent = String(target); return; }
+    const dur = 1400;
+    const start = performance.now();
+    function tick(now) {
+      const p = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const val = Math.round(eased * target);
+      el.textContent = String(val);
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  };
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        animateOne(e.target);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(c => obs.observe(c));
+}
+
+/* =========================================================
+   FORM
+   ========================================================= */
+function setupForm() {
+  const form = document.getElementById('booking-form');
+  const success = document.getElementById('form-success');
+  if (!form) return;
+
+  // Set min date to today
+  const dateInput = document.getElementById('f-date');
+  if (dateInput) {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    dateInput.min = `${yyyy}-${mm}-${dd}`;
+  }
+
+  // Live clear of invalid state
+  form.querySelectorAll('input, select, textarea').forEach(input => {
+    input.addEventListener('input', () => {
+      const field = input.closest('.field');
+      if (field && input.value.trim()) field.classList.remove('invalid');
+    });
+    input.addEventListener('change', () => {
+      const field = input.closest('.field');
+      if (field && input.value.trim()) field.classList.remove('invalid');
+    });
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let ok = true;
+    form.querySelectorAll('[required]').forEach(input => {
+      const field = input.closest('.field');
+      if (!field) return;
+      if (!input.value || !input.value.trim()) {
+        field.classList.add('invalid');
+        ok = false;
+      } else {
+        field.classList.remove('invalid');
+      }
+    });
+
+    if (!ok) {
+      const firstInvalid = form.querySelector('.field.invalid input, .field.invalid select, .field.invalid textarea');
+      if (firstInvalid && typeof firstInvalid.focus === 'function') firstInvalid.focus();
+      return;
+    }
+
+    form.reset();
+    if (success) {
+      success.classList.add('is-visible');
+      success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => success.classList.remove('is-visible'), 7000);
+    }
+  });
+}
+
+/* =========================================================
+   MAP
+   ========================================================= */
+function setupMap() {
+  if (typeof L === 'undefined') return;
+  const el = document.getElementById('map');
+  if (!el) return;
+
+  const lat = 44.6195;
+  const lng = 21.1874;
+  const map = L.map(el, {
+    center: [lat, lng],
+    zoom: 16,
+    scrollWheelZoom: false,
+    zoomControl: true
+  });
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>'
+  }).addTo(map);
+
+  const markerIcon = L.divIcon({
+    className: '',
+    html: '<div class="leaflet-marker-custom" aria-label="Beauty and Life"></div>',
+    iconSize: [36, 36],
+    iconAnchor: [18, 36],
+    popupAnchor: [0, -34]
+  });
+
+  L.marker([lat, lng], { icon: markerIcon })
+    .addTo(map)
+    .bindPopup(
+      '<strong>Beauty and Life</strong><br/>Stari Korzo 30, TC Evrocentar<br/>I sprat lokal 08<br/>Požarevac 12000'
+    );
+
+  // Refresh on first reveal so tiles load correctly when initially hidden
+  setTimeout(() => map.invalidateSize(), 350);
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+document.addEventListener('DOMContentLoaded', () => {
+  // System theme listener (only updates if user hasn't toggled manually within session — but we keep it simple)
+  applyTheme();
+  applyI18n();
+  setupMobileNav();
+  setupCounters();
+  setupForm();
+
+  // Observe reveals on initial render
+  observeReveals(document.querySelectorAll('.reveal'));
+
+  // Buttons
+  const themeBtn = document.getElementById('theme-toggle');
+  if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+
+  const langBtn = document.getElementById('lang-toggle');
+  if (langBtn) langBtn.addEventListener('click', () => {
+    currentLang = currentLang === 'sr' ? 'en' : 'sr';
+    applyI18n();
+  });
+
+  // Wait for Leaflet (deferred) to load
+  if (typeof L !== 'undefined') {
+    setupMap();
+  } else {
+    const wait = setInterval(() => {
+      if (typeof L !== 'undefined') {
+        clearInterval(wait);
+        setupMap();
+      }
+    }, 60);
+    setTimeout(() => clearInterval(wait), 6000);
+  }
+});
+</script>
+
+</body>
+</html>

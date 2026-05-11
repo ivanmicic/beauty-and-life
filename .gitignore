@@ -1,0 +1,18 @@
+# Windows
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# macOS (za svaki slučaj)
+.DS_Store
+
+# Office privremeni fajlovi (~$*.docx kada je dokument otvoren)
+~$*
+
+# Editori
+.vscode/
+.idea/
+*.swp
+
+# Logovi
+*.log
