@@ -9,7 +9,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
@@ -20,8 +20,8 @@
        DESIGN TOKENS
        ========================================================= */
     :root {
-      --font-display: 'Cormorant Garamond', Georgia, serif;
-      --font-body: 'Jost', 'Helvetica Neue', sans-serif;
+      --font-display: 'Inter', 'Helvetica Neue', sans-serif;
+      --font-body: 'Inter', 'Helvetica Neue', sans-serif;
 
       --color-bg: #fdf8f5;
       --color-surface: #fff9f6;
@@ -309,16 +309,13 @@
       text-decoration: none;
       color: var(--color-text);
       font-family: var(--font-display);
-      font-size: 1.25rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
     }
     .nav-logo svg { color: var(--color-primary); }
     .nav-logo:hover { color: var(--color-text); }
-    .nav-logo-text { display: none; }
-    @media (min-width: 1024px) {
-      .nav-logo-text { display: inline; }
-    }
+    .nav-logo-text { display: inline; white-space: nowrap; }
 
     .nav-links {
       display: none;
@@ -521,27 +518,26 @@
     .hero-inner {
       max-width: 800px;
       padding: var(--space-12) 0;
+      margin: 0 auto;
+      text-align: center;
     }
-    @media (min-width: 1024px) {
-      .hero-inner { margin-left: 4%; }
-    }
+    .hero-sub { margin-left: auto; margin-right: auto; }
+    .hero-tags { justify-content: center; }
+    .hero-cta  { justify-content: center; }
     .hero-eyebrow {
       display: inline-flex;
       align-items: center;
       gap: var(--space-3);
-      font-size: var(--text-xs);
-      letter-spacing: 0.25em;
+      font-size: clamp(1rem, 0.75rem + 1vw, 1.5rem);
+      letter-spacing: 0.28em;
       text-transform: uppercase;
       color: var(--color-primary);
-      font-weight: 500;
+      font-weight: 700;
       margin-bottom: var(--space-6);
+      white-space: nowrap;
     }
     .hero-eyebrow::before {
-      content: '';
-      display: inline-block;
-      width: 36px;
-      height: 1px;
-      background-color: var(--color-primary);
+      display: none;
     }
     .hero h1 {
       font-size: var(--text-hero);
@@ -572,6 +568,13 @@
       color: var(--color-text);
       letter-spacing: 0.04em;
       backdrop-filter: blur(8px);
+      text-decoration: none;
+      transition: border-color var(--transition), color var(--transition), background-color var(--transition);
+    }
+    a.hero-tag:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      background-color: oklch(from var(--color-primary) l c h / 0.08);
     }
     .hero-cta {
       display: flex;
@@ -624,6 +627,14 @@
       border: 1px solid oklch(from var(--color-primary) l c h / 0.4);
       border-radius: calc(var(--radius-xl) - 6px);
       pointer-events: none;
+      z-index: 1;
+    }
+    .about-image img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
     .about-image-title {
       font-family: var(--font-display);
@@ -640,13 +651,22 @@
     .about-stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-4);
+      gap: var(--space-5);
       margin-top: var(--space-12);
-      padding-top: var(--space-10);
-      border-top: 1px solid var(--color-divider);
+    }
+    .about-stats > div {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-7) var(--space-6);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
     }
     @media (max-width: 600px) {
-      .about-stats { gap: var(--space-2); }
+      .about-stats { grid-template-columns: 1fr; gap: var(--space-4); }
     }
     .stat-num {
       font-family: var(--font-display);
@@ -729,15 +749,14 @@
       margin: 0;
     }
     @media (min-width: 768px) {
-      .service-card.feat-1 { grid-column: span 4; grid-row: span 2; }
-      .service-card.feat-2 { grid-column: span 2; grid-row: span 2; }
+      .service-card.feat-1,
+      .service-card.feat-2,
       .service-card.small  { grid-column: span 3; }
-      .service-card.feat-1 .service-icon { width: 60px; height: 60px; }
-      .service-card.feat-1 .service-title,
-      .service-card.feat-2 .service-title { font-size: var(--text-xl); }
     }
     @media (min-width: 1024px) {
-      .service-card.small { grid-column: span 3; }
+      .service-card.feat-1,
+      .service-card.feat-2,
+      .service-card.small  { grid-column: span 2; }
     }
 
     /* =========================================================
@@ -1219,6 +1238,32 @@
     }
 
     /* =========================================================
+       GLOW HOVER EFFECT — uniform across all cards/boxes
+       ========================================================= */
+    .about-stats > div,
+    .service-card,
+    .pricing-card,
+    .review-card,
+    .contact-item {
+      transition:
+        transform var(--transition),
+        box-shadow var(--transition),
+        border-color var(--transition);
+    }
+
+    .about-stats > div:hover,
+    .service-card:hover,
+    .pricing-card:hover,
+    .review-card:hover,
+    .contact-item:hover {
+      border-color: oklch(from var(--color-primary) l c h / 0.55);
+      box-shadow:
+        0 0 0 1px oklch(from var(--color-primary) l c h / 0.25),
+        0 0 14px 3px oklch(from var(--color-primary) l c h / 0.22),
+        0 0 32px 8px oklch(from var(--color-primary) l c h / 0.10);
+    }
+
+    /* =========================================================
        SCROLL REVEAL
        ========================================================= */
     .reveal {
@@ -1255,12 +1300,11 @@
   <div class="nav-inner">
     <a href="#hero" class="nav-logo" aria-label="Beauty and Life — početna">
       <!-- B&L lotus monogram -->
-      <svg width="40" height="40" viewBox="0 0 60 60" fill="none" aria-hidden="true">
-        <path d="M30 8 C 22 16 22 26 30 32 C 38 26 38 16 30 8 Z" fill="currentColor" opacity="0.16"/>
-        <path d="M30 14 C 25 20 25 28 30 32 C 35 28 35 20 30 14 Z" fill="currentColor" opacity="0.6"/>
-        <text x="30" y="48" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="20" font-style="italic" font-weight="600" fill="currentColor">B&amp;L</text>
+      <svg width="22" height="32" viewBox="20 6 20 28" fill="none" aria-hidden="true">
+        <path d="M30 8 C 22 16 22 26 30 32 C 38 26 38 16 30 8 Z" fill="currentColor" opacity="0.25"/>
+        <path d="M30 14 C 25 20 25 28 30 32 C 35 28 35 20 30 14 Z" fill="currentColor" opacity="0.85"/>
       </svg>
-      <span class="nav-logo-text">Beauty and Life</span>
+      <span class="nav-logo-text">B&amp;L</span>
     </a>
 
     <nav aria-label="Glavna navigacija">
@@ -1319,18 +1363,18 @@
 
     <div class="container">
       <div class="hero-inner">
-        <span class="hero-eyebrow" data-i18n="hero.eyebrow">Kozmetički salon · Požarevac</span>
+        <span class="hero-eyebrow" data-i18n="hero.eyebrow">Kozmetički salon „Beauty and Life" Požarevac</span>
         <h1 id="hero-title" data-i18n="hero.title">Lepota je tvoj poziv</h1>
         <p class="hero-sub" data-i18n="hero.sub">
           Personalizovani tretmani lepote i nege, sa preko deset godina iskustva. Mesto gde se opuštanje sreće sa stilom.
         </p>
         <div class="hero-tags" role="list">
-          <span class="hero-tag" role="listitem" data-i18n="hero.tag.manikir">Manikir</span>
-          <span class="hero-tag" role="listitem" data-i18n="hero.tag.gel">Gel/Akril</span>
-          <span class="hero-tag" role="listitem" data-i18n="hero.tag.makeup">Šminka</span>
-          <span class="hero-tag" role="listitem" data-i18n="hero.tag.massage">Masaža</span>
-          <span class="hero-tag" role="listitem" data-i18n="hero.tag.solarium">Solarijum</span>
-          <span class="hero-tag" role="listitem" data-i18n="hero.tag.training">Obuke</span>
+          <a class="hero-tag" href="#usluga-manikir"   data-i18n="hero.tag.manikir">Manikir &amp; Nokti</a>
+          <a class="hero-tag" href="#usluga-masaza"    data-i18n="hero.tag.massage">Masaža</a>
+          <a class="hero-tag" href="#usluga-sminka"    data-i18n="hero.tag.makeup">Šminka</a>
+          <a class="hero-tag" href="#usluga-solarijum" data-i18n="hero.tag.solarium">Solarijum</a>
+          <a class="hero-tag" href="#usluga-nega"      data-i18n="hero.tag.gel">Nega kože</a>
+          <a class="hero-tag" href="#usluga-obuke"     data-i18n="hero.tag.training">Obuke</a>
         </div>
         <div class="hero-cta">
           <a href="#zakazivanje" class="btn btn-primary" data-i18n="hero.cta">Zakaži termin</a>
@@ -1345,10 +1389,11 @@
        ========================================================= -->
   <section class="section" id="o-salonu" aria-labelledby="about-title">
     <div class="container">
+      <span class="section-eyebrow reveal" data-i18n="about.eyebrow">O salonu</span>
+      <h2 id="about-title" class="section-title reveal" data-i18n="about.title">Toplina, posvećenost i preciznost u svakom detalju</h2>
+
       <div class="about-grid">
         <div class="about-text">
-          <span class="section-eyebrow reveal" data-i18n="about.eyebrow">O salonu</span>
-          <h2 id="about-title" class="section-title reveal" data-i18n="about.title">Toplina, posvećenost i preciznost u svakom detalju</h2>
           <p class="reveal" data-i18n="about.p1">
             Beauty and Life je kozmetički salon u srcu Požarevca, u TC Evrocentru. Vodi ga Danijela Stojanović — iskusna kozmetičarka koja svaku klijentkinju doživljava kao priču o sebi, sa pažnjom prema detaljima koje druge usluge zaboravljaju.
           </p>
@@ -1361,27 +1406,25 @@
           <p class="reveal" data-i18n="about.p4">
             Dođite kod nas — kafa, razgovor i tretman po vašoj meri uvek vas čekaju.
           </p>
-
-          <div class="about-stats reveal">
-            <div>
-              <span class="stat-num" data-count="10">0</span><span style="font-family:var(--font-display);font-size:1.5rem;color:var(--color-primary);">+</span>
-              <span class="stat-label" data-i18n="about.stat1">godina iskustva</span>
-            </div>
-            <div>
-              <span class="stat-num" data-count="1000">0</span><span style="font-family:var(--font-display);font-size:1.5rem;color:var(--color-primary);">+</span>
-              <span class="stat-label" data-i18n="about.stat2">zadovoljnih klijentkinja</span>
-            </div>
-            <div>
-              <span class="stat-num" data-count="6">0</span>
-              <span class="stat-label" data-i18n="about.stat3">usluga u ponudi</span>
-            </div>
-          </div>
         </div>
 
-        <div class="about-image reveal" role="img" aria-label="Beauty and Life salon">
-          <span class="about-image-sub" data-i18n="about.imgSub">Kozmetički salon</span>
-          <span class="about-image-title">Beauty <em style="font-style:italic;">&amp;</em> Life</span>
-          <span class="about-image-sub" style="color: var(--color-text-muted);">Požarevac · Stari Korzo 30</span>
+        <div class="about-image reveal">
+          <img src="assets/beauty-and-life-studio.png" alt="Studio Beauty and Life salon" loading="lazy" />
+        </div>
+      </div>
+
+      <div class="about-stats reveal">
+        <div>
+          <span class="stat-num" data-count="10">0</span><span style="font-family:var(--font-display);font-size:1.5rem;color:var(--color-primary);">+</span>
+          <span class="stat-label" data-i18n="about.stat1">godina iskustva</span>
+        </div>
+        <div>
+          <span class="stat-num" data-count="1000">0</span><span style="font-family:var(--font-display);font-size:1.5rem;color:var(--color-primary);">+</span>
+          <span class="stat-label" data-i18n="about.stat2">zadovoljnih klijentkinja</span>
+        </div>
+        <div>
+          <span class="stat-num" data-count="6">0</span>
+          <span class="stat-label" data-i18n="about.stat3">usluga u ponudi</span>
         </div>
       </div>
     </div>
@@ -1399,7 +1442,7 @@
       </p>
 
       <div class="services-grid">
-        <article class="service-card feat-1 reveal">
+        <article class="service-card feat-1 reveal" id="usluga-manikir">
           <svg class="service-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M16 4c-3 0-5 2-5 5v10c0 3 2 5 5 5s5-2 5-5V9c0-3-2-5-5-5z"/>
             <path d="M11 14h10"/>
@@ -1411,7 +1454,7 @@
           <a href="#zakazivanje" class="btn-ghost-link" data-i18n="service.more">Saznaj više →</a>
         </article>
 
-        <article class="service-card feat-2 reveal">
+        <article class="service-card feat-2 reveal" id="usluga-masaza">
           <svg class="service-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M5 18c2-4 6-6 11-6s9 2 11 6"/>
             <circle cx="16" cy="9" r="3"/>
@@ -1429,7 +1472,7 @@
             <path d="M16 12v8"/>
             <circle cx="22" cy="22" r="2.5" fill="currentColor" opacity="0.25"/>
           </svg>
-          <h3 class="service-title" data-i18n="service.s3.title">Šminka</h3>
+          <h3 class="service-title" id="usluga-sminka" data-i18n="service.s3.title">Šminka</h3>
           <p class="service-desc" data-i18n="service.s3.desc">Svakodnevna, svadbena i prom šminka. Lepota koja izgleda kao vi — samo bolji dan.</p>
           <a href="#zakazivanje" class="btn-ghost-link" data-i18n="service.more">Saznaj više →</a>
         </article>
@@ -1439,7 +1482,7 @@
             <circle cx="16" cy="16" r="5"/>
             <path d="M16 3v3M16 26v3M3 16h3M26 16h3M6.5 6.5l2 2M23.5 23.5l-2-2M6.5 25.5l2-2M23.5 8.5l-2 2"/>
           </svg>
-          <h3 class="service-title" data-i18n="service.s4.title">Solarijum</h3>
+          <h3 class="service-title" id="usluga-solarijum" data-i18n="service.s4.title">Solarijum</h3>
           <p class="service-desc" data-i18n="service.s4.desc">Moderne UV kabine, bezbedna preplanulost. Sjaj koža bez čekanja na leto.</p>
           <a href="#zakazivanje" class="btn-ghost-link" data-i18n="service.more">Saznaj više →</a>
         </article>
@@ -1449,7 +1492,7 @@
             <path d="M16 4C10 8 8 14 8 18c0 5 4 8 8 8s8-3 8-8c0-4-2-10-8-14z"/>
             <path d="M16 14c-2 2-3 4-3 6"/>
           </svg>
-          <h3 class="service-title" data-i18n="service.s5.title">Nega kože</h3>
+          <h3 class="service-title" id="usluga-nega" data-i18n="service.s5.title">Nega kože</h3>
           <p class="service-desc" data-i18n="service.s5.desc">Tretmani lica i dubinsko čišćenje. Koža koja diše i bolje upija dnevnu negu.</p>
           <a href="#zakazivanje" class="btn-ghost-link" data-i18n="service.more">Saznaj više →</a>
         </article>
@@ -1460,7 +1503,7 @@
             <path d="M6 7a2 2 0 0 1 2-2h14"/>
             <path d="M11 12h8M11 16h8M11 20h5"/>
           </svg>
-          <h3 class="service-title" data-i18n="service.s6.title">Obuke</h3>
+          <h3 class="service-title" id="usluga-obuke" data-i18n="service.s6.title">Obuke</h3>
           <p class="service-desc" data-i18n="service.s6.desc">Kursevi i sertifikati za kozmetičare. Mali timovi, mnogo prakse, brz ulazak u struku.</p>
           <a href="#zakazivanje" class="btn-ghost-link" data-i18n="service.more">Saznaj više →</a>
         </article>
@@ -1714,7 +1757,7 @@
           <svg width="36" height="36" viewBox="0 0 60 60" fill="none" aria-hidden="true">
             <path d="M30 8 C 22 16 22 26 30 32 C 38 26 38 16 30 8 Z" fill="currentColor" opacity="0.16"/>
             <path d="M30 14 C 25 20 25 28 30 32 C 35 28 35 20 30 14 Z" fill="currentColor" opacity="0.6"/>
-            <text x="30" y="48" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="20" font-style="italic" font-weight="600" fill="currentColor">B&amp;L</text>
+            <text x="30" y="48" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" font-style="italic" font-weight="600" fill="currentColor">B&amp;L</text>
           </svg>
           <span>Beauty and Life</span>
         </div>
@@ -1784,11 +1827,11 @@ const i18n = {
     'nav.book':     'Zakazivanje',
     'nav.location': 'Lokacija',
 
-    'hero.eyebrow':      'Kozmetički salon · Požarevac',
+    'hero.eyebrow':      'Kozmetički salon \u201eBeauty and Life\u201c Požarevac',
     'hero.title':        'Lepota je tvoj poziv',
     'hero.sub':          'Personalizovani tretmani lepote i nege, sa preko deset godina iskustva. Mesto gde se opuštanje sreće sa stilom.',
-    'hero.tag.manikir':  'Manikir',
-    'hero.tag.gel':      'Gel/Akril',
+    'hero.tag.manikir':  'Manikir & Nokti',
+    'hero.tag.gel':      'Nega kože',
     'hero.tag.makeup':   'Šminka',
     'hero.tag.massage':  'Masaža',
     'hero.tag.solarium': 'Solarijum',
@@ -1919,11 +1962,11 @@ const i18n = {
     'nav.book':     'Book',
     'nav.location': 'Location',
 
-    'hero.eyebrow':      'Beauty salon · Požarevac',
+    'hero.eyebrow':      'Beauty salon \u201cBeauty and Life\u201d Požarevac',
     'hero.title':        'Beauty is your calling',
     'hero.sub':          'Personalised beauty and wellness treatments, with over a decade of experience. Where relaxation meets style.',
-    'hero.tag.manikir':  'Manicure',
-    'hero.tag.gel':      'Gel/Acrylic',
+    'hero.tag.manikir':  'Nails & Manicure',
+    'hero.tag.gel':      'Skin Care',
     'hero.tag.makeup':   'Makeup',
     'hero.tag.massage':  'Massage',
     'hero.tag.solarium': 'Solarium',
