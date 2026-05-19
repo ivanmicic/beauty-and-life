@@ -1287,6 +1287,115 @@
 
     /* Leaflet inside dark mode niceties */
     [data-theme="dark"] .leaflet-tile { filter: brightness(0.85) saturate(0.85); }
+
+    /* =========================================================
+       GALLERY LIGHTBOX
+       ========================================================= */
+    .gallery-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-4);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 260ms ease;
+    }
+    .gallery-modal.is-open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .gallery-backdrop {
+      position: absolute;
+      inset: 0;
+      background: oklch(0.05 0 0 / 0.88);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      cursor: pointer;
+    }
+    .gallery-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-4);
+      max-width: min(92vw, 880px);
+      width: 100%;
+    }
+    .gallery-img {
+      display: block;
+      max-height: 75vh;
+      max-width: 100%;
+      width: auto;
+      height: auto;
+      border-radius: var(--radius-lg);
+      object-fit: contain;
+      box-shadow: 0 24px 80px oklch(0 0 0 / 0.7);
+      transition: opacity 200ms ease;
+    }
+    .gallery-img.is-loading { opacity: 0; }
+    .gallery-counter {
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      color: oklch(0.85 0 0 / 0.7);
+      letter-spacing: 0.08em;
+      user-select: none;
+    }
+    .gallery-close,
+    .gallery-prev,
+    .gallery-next {
+      position: fixed;
+      z-index: 2;
+      background: oklch(0.15 0 0 / 0.7);
+      border: 1px solid oklch(1 0 0 / 0.12);
+      color: oklch(0.95 0 0);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: background var(--transition), transform var(--transition);
+      backdrop-filter: blur(4px);
+    }
+    .gallery-close:hover,
+    .gallery-prev:hover,
+    .gallery-next:hover {
+      background: oklch(0.25 0 0 / 0.85);
+      transform: scale(1.08);
+    }
+    .gallery-close {
+      top: var(--space-5);
+      right: var(--space-5);
+      width: 44px;
+      height: 44px;
+      font-size: 1.2rem;
+    }
+    .gallery-prev,
+    .gallery-next {
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      font-size: 1.5rem;
+    }
+    .gallery-prev:hover,
+    .gallery-next:hover {
+      transform: translateY(-50%) scale(1.08);
+    }
+    .gallery-prev { left: var(--space-4); }
+    .gallery-next { right: var(--space-4); }
+    .gallery-prev[hidden],
+    .gallery-next[hidden] { display: none; }
+
+    @media (max-width: 600px) {
+      .gallery-prev { left: var(--space-2); }
+      .gallery-next { right: var(--space-2); }
+      .gallery-close { top: var(--space-3); right: var(--space-3); }
+    }
   </style>
 </head>
 <body>
@@ -1369,7 +1478,7 @@
           Personalizovani tretmani lepote i nege, sa preko deset godina iskustva. Mesto gde se opuštanje sreće sa stilom.
         </p>
         <div class="hero-tags" role="list">
-          <a class="hero-tag" href="#usluga-manikir"   data-i18n="hero.tag.manikir">Manikir &amp; Nokti</a>
+          <a class="hero-tag" href="#usluga-manikir" data-i18n="hero.tag.manikir" onclick="openGallery('nokti'); return false;">Manikir &amp; Nokti</a>
           <a class="hero-tag" href="#usluga-masaza"    data-i18n="hero.tag.massage">Masaža</a>
           <a class="hero-tag" href="#usluga-sminka"    data-i18n="hero.tag.makeup">Šminka</a>
           <a class="hero-tag" href="#usluga-solarijum" data-i18n="hero.tag.solarium">Solarijum</a>
@@ -1451,7 +1560,7 @@
           </svg>
           <h3 class="service-title" data-i18n="service.s1.title">Manikir &amp; Nokti</h3>
           <p class="service-desc" data-i18n="service.s1.desc">Gel, akril i prirodni manikir. Dizajn po vašoj želji, dugotrajno i postojano.</p>
-          <a href="#zakazivanje" class="btn-ghost-link" data-i18n="service.more">Saznaj više →</a>
+          <a href="#usluga-manikir" class="btn-ghost-link" data-i18n="service.more" onclick="openGallery('nokti'); return false;">Saznaj više →</a>
         </article>
 
         <article class="service-card feat-2 reveal" id="usluga-masaza">
@@ -2356,6 +2465,97 @@ function setupMap() {
 }
 
 /* =========================================================
+   GALLERY LIGHTBOX
+   ========================================================= */
+const GALLERIES = {
+  nokti: [
+    'Galerija nokti/Nokti 1.jpeg',
+    'Galerija nokti/Nokti 2.jpeg',
+    'Galerija nokti/Nokti 3.jpeg',
+    'Galerija nokti/Nokti 4.jpeg',
+    'Galerija nokti/Nokti 5.jpg',
+    'Galerija nokti/Nokti 6.jpg',
+  ]
+};
+
+let galleryState = { key: null, index: 0 };
+
+function openGallery(key, startIndex = 0) {
+  const modal   = document.getElementById('gallery-modal');
+  if (!modal || !GALLERIES[key]) return;
+  galleryState = { key, index: startIndex };
+  modal.removeAttribute('hidden');
+  requestAnimationFrame(() => modal.classList.add('is-open'));
+  document.body.style.overflow = 'hidden';
+  renderGallerySlide();
+  modal.focus();
+}
+
+function closeGallery() {
+  const modal = document.getElementById('gallery-modal');
+  if (!modal) return;
+  modal.classList.remove('is-open');
+  document.body.style.overflow = '';
+  setTimeout(() => modal.setAttribute('hidden', ''), 270);
+}
+
+function renderGallerySlide() {
+  const { key, index } = galleryState;
+  const images  = GALLERIES[key];
+  const img     = document.getElementById('gallery-img');
+  const counter = document.getElementById('gallery-counter');
+  const prev    = document.getElementById('gallery-prev');
+  const next    = document.getElementById('gallery-next');
+  if (!img || !images) return;
+
+  img.classList.add('is-loading');
+  img.onload = () => img.classList.remove('is-loading');
+  img.src = images[index];
+  img.alt = `Nokti — slika ${index + 1}`;
+
+  if (counter) counter.textContent = `${index + 1} / ${images.length}`;
+  if (prev)  index > 0                  ? prev.removeAttribute('hidden') : prev.setAttribute('hidden', '');
+  if (next)  index < images.length - 1  ? next.removeAttribute('hidden') : next.setAttribute('hidden', '');
+}
+
+function galleryGo(dir) {
+  const images = GALLERIES[galleryState.key];
+  if (!images) return;
+  const next = galleryState.index + dir;
+  if (next < 0 || next >= images.length) return;
+  galleryState.index = next;
+  renderGallerySlide();
+}
+
+function setupGallery() {
+  document.getElementById('gallery-close')?.addEventListener('click', closeGallery);
+  document.getElementById('gallery-backdrop')?.addEventListener('click', closeGallery);
+  document.getElementById('gallery-prev')?.addEventListener('click', () => galleryGo(-1));
+  document.getElementById('gallery-next')?.addEventListener('click', () => galleryGo(1));
+
+  document.addEventListener('keydown', (e) => {
+    const modal = document.getElementById('gallery-modal');
+    if (!modal || modal.hasAttribute('hidden')) return;
+    if (e.key === 'Escape')      closeGallery();
+    if (e.key === 'ArrowLeft')   galleryGo(-1);
+    if (e.key === 'ArrowRight')  galleryGo(1);
+  });
+
+  // Touch/swipe support
+  let touchStartX = null;
+  const modal = document.getElementById('gallery-modal');
+  if (modal) {
+    modal.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    modal.addEventListener('touchend', (e) => {
+      if (touchStartX === null) return;
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 50) galleryGo(dx < 0 ? 1 : -1);
+      touchStartX = null;
+    }, { passive: true });
+  }
+}
+
+/* =========================================================
    INIT
    ========================================================= */
 document.addEventListener('DOMContentLoaded', () => {
@@ -2365,6 +2565,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupMobileNav();
   setupCounters();
   setupForm();
+  setupGallery();
 
   // Observe reveals on initial render
   observeReveals(document.querySelectorAll('.reveal'));
@@ -2393,6 +2594,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 </script>
+
+<!-- =========================================================
+     GALLERY LIGHTBOX MODAL
+     ========================================================= -->
+<div id="gallery-modal" class="gallery-modal" role="dialog" aria-modal="true" aria-label="Galerija nokti" hidden>
+  <div class="gallery-backdrop" id="gallery-backdrop"></div>
+  <button class="gallery-close" id="gallery-close" aria-label="Zatvori galeriju">✕</button>
+  <button class="gallery-prev" id="gallery-prev" aria-label="Prethodna slika">‹</button>
+  <button class="gallery-next" id="gallery-next" aria-label="Sledeća slika">›</button>
+  <div class="gallery-inner">
+    <img class="gallery-img" id="gallery-img" src="" alt="Galerija nokti" />
+    <div class="gallery-counter" id="gallery-counter"></div>
+  </div>
+</div>
 
 </body>
 </html>

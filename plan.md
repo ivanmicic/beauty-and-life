@@ -67,13 +67,13 @@ Postojeci fajlovi:
 
 ### Prioritet 1
 
-- Nabaviti i dodati fotografije za galerije po uslugama (manikir, masaza, sminka, solarijum, nega koze, obuke).
-- Implementirati lightbox galeriju za svaku uslugu kada fotografije budu dostupne.
+- Implementirati galerije za preostalih 5 usluga kada fotografije budu dostupne (masaza, sminka, solarijum, nega koze, obuke).
 - Dodati jos fotografija salona i vlasnice u sekciju "O salonu".
 - Dodati favicon.
 - Dodati Open Graph meta tagove za lep prikaz pri deljenju linka.
 - Proveriti tekstove, cene, kontakt podatke i Instagram profil.
 - Proveriti prikaz na mobilnom uredjaju nakon izmena layout-a.
+- Odluciti resenje za hosting slika (lokalni folderi + rucno azuriranje vs. automatsko ucitavanje po konvenciji naziva vs. eksterni servis kao Cloudinary).
 
 ### Prioritet 2
 
@@ -121,8 +121,20 @@ Agent treba da proveri trenutno stanje pre izmena i da nakon znacajne izmene azu
 - Treba proveriti da li su svi podaci tacni pre objave: cene, radno vreme, Instagram link, Facebook link.
 - Treba odluciti gde ce sajt biti hostovan.
 - Footer SVG logo jos uvek ima stari B&L text unutar SVG - moze se uskladiti sa novim logom ako bude potrebno.
+- Galerija nokti je implementirana sa 6 slika (hardkodovane putanje). Svako dodavanje novih slika zahteva i azuriranje niza GALLERIES.nokti u HTML-u. Razmatrati automatsko ucitavanje po konvenciji naziva kada se odabere hosting resenje.
 
 ## Dnevnik rada
+
+### 2026-05-19
+
+- Implementirana lightbox galerija za uslugu "Manikir & Nokti".
+- Dodato 6 fotografija u `Galerija nokti/` (Nokti 1-6).
+- Hero tag "Manikir & Nokti" i link "Saznaj vise" u kartici usluge sada otvaraju galeriju umesto da vode na zakazivanje.
+- Galerija podrZava: navigacija strelicama, tastatura (←→ Escape), swipe na mobilnom, brojaC slika, animacija pri otvaranju.
+- Dodat folder `Galerija obuka/` (3 slike), `Galerija soal/` (1 slika), `Galerija sminka/` (4 slike) - galerije za te usluge ce biti implementirane kada se odluci pristup hostovanju slika.
+- Razgovarano o strategiji hostovanja slika - odluka odlozena.
+- Azuriran `plan.md`.
+- Kod poslat na GitHub.
 
 ### 2026-05-17
 
