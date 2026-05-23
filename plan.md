@@ -24,7 +24,7 @@ Glavne karakteristike:
 
 ## Trenutno stanje
 
-Projekat je u aktivnom razvoju. Vizuelni deo sajta je znacajno unapredjen u sesiji 2026-05-17.
+Projekat je u aktivnom razvoju. Galerije i Instagram sekcija su znacajno unapredjene u sesiji 2026-05-23.
 
 Postojeci fajlovi:
 
@@ -46,6 +46,11 @@ Postojeci fajlovi:
 - Dodata osnovna responsive podrska.
 - Napravljen `README.md`.
 - Napravljen `plan.md` kao radni dokument za pracenje razvoja.
+- Implementirane lightbox galerije za svih 5 usluga sa fotografijama (nokti, masaza, sminka, solarijum, obuke).
+- Svaki hero tag i svaka kartica usluge vodi na odgovarajucu galeriju.
+- Dodat CTA "Zakazi termin" unutar galerije koji vodi do forme za zakazivanje.
+- Dodat `assets/ig/` folder za Instagram fotografije; prvi tile povezan sa pravom fotografijom i linkom.
+- Instagram profil identifikovan: @danijela_beauty_and_life.
 
 ### Vizuelne izmene (2026-05-17)
 
@@ -67,21 +72,22 @@ Postojeci fajlovi:
 
 ### Prioritet 1
 
-- Implementirati galerije za preostalih 5 usluga kada fotografije budu dostupne (masaza, sminka, solarijum, nega koze, obuke).
 - Dodati jos fotografija salona i vlasnice u sekciju "O salonu".
+- Popuniti galeriju za "Nega koze" kada fotografije budu dostupne.
+- Dopuniti Instagram sekciju sa preostalih 5 fotografija po izboru vlasnice (imamo template, dodaje se brzo).
+- Azurirati Instagram linkove na pravi profil u footeru i kontakt sekciji (trenutno vodi na instagram.com/). Pravi link: https://www.instagram.com/danijela_beauty_and_life/
 - Dodati favicon.
 - Dodati Open Graph meta tagove za lep prikaz pri deljenju linka.
-- Proveriti tekstove, cene, kontakt podatke i Instagram profil.
-- Proveriti prikaz na mobilnom uredjaju nakon izmena layout-a.
-- Odluciti resenje za hosting slika (lokalni folderi + rucno azuriranje vs. automatsko ucitavanje po konvenciji naziva vs. eksterni servis kao Cloudinary).
+- Proveriti tekstove, cene, kontakt podatke.
+- Proveriti prikaz na mobilnom uredjaju.
 
 ### Prioritet 2
 
-- Povezati formu za zakazivanje sa stvarnim servisom:
-  - Formspree
-  - Web3Forms
-  - WhatsApp link
-  - email servis
+- Odluciti i implementirati resenje za zakazivanje termina:
+  - WhatsApp link (najbrze, odmah)
+  - Formspree / Web3Forms (forma salje email, 10 minuta podesavanja)
+  - Calendly (automatska potvrda termina)
+  - Booking sistem: Fresha, Treatwell, Booksy (profesionalno, placa se)
 - Testirati slanje forme na desktopu i telefonu.
 - Proveriti mapu i adresu.
 
@@ -116,14 +122,29 @@ Agent treba da proveri trenutno stanje pre izmena i da nakon znacajne izmene azu
 
 ## Napomene / problemi
 
-- Forma trenutno nema pravi backend (Formspree, Web3Forms ili WhatsApp link).
+- Forma trenutno nema pravi backend (Formspree, Web3Forms ili WhatsApp link) - odluka odlozena.
 - U "O salonu" je jedna fotografija salona - dodati jos slika kada budu dostupne.
 - Treba proveriti da li su svi podaci tacni pre objave: cene, radno vreme, Instagram link, Facebook link.
 - Treba odluciti gde ce sajt biti hostovan.
 - Footer SVG logo jos uvek ima stari B&L text unutar SVG - moze se uskladiti sa novim logom ako bude potrebno.
-- Galerija nokti je implementirana sa 6 slika (hardkodovane putanje). Svako dodavanje novih slika zahteva i azuriranje niza GALLERIES.nokti u HTML-u. Razmatrati automatsko ucitavanje po konvenciji naziva kada se odabere hosting resenje.
+- Sve galerije imaju hardkodovane putanje u GALLERIES objektu u HTML-u. Dodavanje novih slika zahteva azuriranje tog niza. Folder i fajl nazivi moraju biti tacni (ukljucujuci dijakritike i velikaslovnost).
+- Instagram linkovi u footeru i kontakt sekciji jos vode na instagram.com/ umesto na pravi profil @danijela_beauty_and_life.
+- Galerija za "Nega koze" je prazna - ceka fotografije.
+- Instagram sekcija ima samo 1 od 6 fotografija (ig-1.jpg). Preostalih 5 ceka izbor vlasnice.
 
 ## Dnevnik rada
+
+### 2026-05-23
+
+- Implementirane galerije za Masazu (8 slika), Sminku (7 slika), Solarijum (11 slika) i Obuke (9 slika).
+- Svaki hero tag i kartica usluge sada otvaraju odgovarajucu galeriju fotografija.
+- Resavan problem sa Unicode imenima foldera i fajlova (dijakritike, velicina slova) - proveravati uvek UTF8 ispis.
+- Dodat CTA "Zakazi termin" unutar lightbox galerije, vodi na formu za zakazivanje.
+- Kreiran folder `assets/ig/`; dodata prva Instagram fotografija (ig-1.jpg) sa linkom na pravi post.
+- Razmotren izbor resenja za zakazivanje termina - odluka odlozena do dogovora sa Danijelom.
+- Testirana promena fontova (Peace Sans + Open Sauce One) - odlika vracena na Inter.
+- Azuriran `plan.md`.
+- Kod poslat na GitHub.
 
 ### 2026-05-19
 
