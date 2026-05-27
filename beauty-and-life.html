@@ -9,7 +9,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Tangerine:wght@400;700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
@@ -313,7 +313,15 @@
       font-weight: 700;
       letter-spacing: 0.04em;
     }
-    .nav-logo svg { color: var(--color-primary); }
+    @keyframes logo-spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    .nav-logo svg {
+      color: var(--color-primary);
+      transform-origin: center center;
+      animation: logo-spin 6s linear infinite;
+    }
     .nav-logo:hover { color: var(--color-text); }
     .nav-logo-text { display: inline; white-space: nowrap; }
 
@@ -528,11 +536,11 @@
       display: inline-flex;
       align-items: center;
       gap: var(--space-3);
-      font-size: clamp(1rem, 0.75rem + 1vw, 1.5rem);
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
+      font-size: clamp(1.2rem, 1rem + 1.2vw, 1.8rem);
+      letter-spacing: 0.1em;
       color: var(--color-primary);
       font-weight: 700;
+      font-style: normal;
       margin-bottom: var(--space-6);
       white-space: nowrap;
     }
@@ -540,10 +548,11 @@
       display: none;
     }
     .hero h1 {
-      font-size: var(--text-hero);
+      font-size: clamp(4rem, 2rem + 6vw, 8rem);
       margin-bottom: var(--space-6);
-      font-weight: 500;
-      font-style: italic;
+      font-family: 'Tangerine', cursive;
+      font-weight: 700;
+      font-style: normal;
     }
     .hero-sub {
       font-size: var(--text-lg);
@@ -712,18 +721,18 @@
       overflow: hidden;
     }
     .service-card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-md);
-      border-color: oklch(from var(--color-primary) l c h / 0.4);
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg), 0 0 28px oklch(from var(--color-primary) l c h / 0.25);
+      border-color: oklch(from var(--color-primary) l c h / 0.75);
     }
     .service-card::after {
       content: '';
       position: absolute;
       top: 0;
       right: 0;
-      width: 120px;
-      height: 120px;
-      background: radial-gradient(circle at top right, oklch(from var(--color-primary) l c h / 0.18), transparent 60%);
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle at top right, oklch(from var(--color-primary) l c h / 0.35), transparent 65%);
       pointer-events: none;
       opacity: 0;
       transition: opacity var(--transition);

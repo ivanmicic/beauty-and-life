@@ -24,7 +24,7 @@ Glavne karakteristike:
 
 ## Trenutno stanje
 
-Projekat je u aktivnom razvoju. Galerije i Instagram sekcija su znacajno unapredjene u sesiji 2026-05-23.
+Projekat je u aktivnom razvoju. Vizuelna podesavanja hero sekcije i interaktivnost kartica unapredjeni u sesiji 2026-05-27.
 
 Postojeci fajlovi:
 
@@ -133,6 +133,17 @@ Agent treba da proveri trenutno stanje pre izmena i da nakon znacajne izmene azu
 - Instagram sekcija ima samo 1 od 6 fotografija (ig-1.jpg). Preostalih 5 ceka izbor vlasnice.
 
 ## Dnevnik rada
+
+### 2026-05-27
+
+- Hero eyebrow tekst ("Kozmetički salon...") - uklonjen text-transform uppercase, prikazuje se malo/veliko slovo.
+- Hero eyebrow tekst - povećan font (clamp 1.2–1.8rem), smanjen letter-spacing (0.1em), uklonjen italic.
+- Hero naslov - promenjen font na Tangerine (Google Fonts), uklonjen italic, povećan (clamp 4–8rem).
+- Hero naslov (engleski) - smanjen font da "Beauty is your calling" stane u jedan red.
+- Hover efekat na karticama usluga - pojačan: vece podizanje (-8px), jaci glow i border, siri radial-gradient u uglu.
+- Logo kapljica - dodata CSS animacija stalnog okretanja 360° (6s linear infinite).
+- Azuriran plan.md.
+- Kod poslat na GitHub.
 
 ### 2026-05-23
 
