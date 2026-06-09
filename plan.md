@@ -77,7 +77,7 @@ Postojeci fajlovi:
 - Popuniti galeriju za "Nega koze" kada fotografije budu dostupne.
 - Dopuniti Instagram sekciju sa preostalih 5 fotografija po izboru vlasnice.
 - Proveriti tekstove, cene, kontakt podatke (nakon susreta sa Danijelom).
-- Pri deploy-u zameniti SITE_URL u og:image, og:url i twitter:image meta tagovima.
+- Opciono: custom domen na Vercel-u umesto beauty-and-life.vercel.app.
 
 ### Prioritet 2
 
@@ -87,10 +87,9 @@ Postojeci fajlovi:
 
 ### Prioritet 3
 
-- Postaviti projekat na GitHub.
-- Deploy sajta online.
-- Testirati prikaz na mobilnom, tabletu i desktopu.
+- Testirati prikaz na mobilnom, tabletu i desktopu (produkcija: beauty-and-life.vercel.app).
 - Proveriti SEO osnovu: title, description, headings, alt tekstovi.
+- Opciono: custom domen.
 
 ## Vazne odluke
 
@@ -136,6 +135,9 @@ Agent treba da proveri trenutno stanje pre izmena i da nakon znacajne izmene azu
 - Dodat favicon (assets/favicon.svg) i Open Graph / Twitter Card meta tagovi.
 - Azuriran README.md.
 - Azuriran plan.md.
+- GitHub repo kreiran: github.com/ivanmicic/beauty-and-life
+- Deploy na Vercel: beauty-and-life.vercel.app
+- OG meta tagovi azurirani sa produkcijskom adresom.
 
 ### 2026-06-06
 

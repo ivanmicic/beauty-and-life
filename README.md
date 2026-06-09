@@ -76,16 +76,17 @@ Instaliraj ekstenziju "Live Server" (autor: Ritwick Dey), pa desni klik na `beau
 - Favicon i Open Graph meta tagovi za deljenje linka
 - Potpuno responsive, mobile-first
 
-## Pre deploy-a
+## Produkcija
 
-U `beauty-and-life.html`, u `<head>` sekciji, zameniti `SITE_URL` punom produkcijskom adresom (npr. `https://vas-domen.rs`) u `og:image`, `og:url` i `twitter:image` meta tagovima.
+- **Sajt:** [https://beauty-and-life.vercel.app](https://beauty-and-life.vercel.app)
+- **GitHub:** [https://github.com/ivanmicic/beauty-and-life](https://github.com/ivanmicic/beauty-and-life)
 
 ## Sledeći koraci
 
 - Povezati formu za zakazivanje (planirano: WhatsApp)
 - Dodati preostale fotografije (O salonu, Instagram, galerija Nega kože) po izboru vlasnice
 - Finalna provera cena, radnog vremena i tekstova sa Danijelom
-- GitHub + deploy online
+- Opciono: custom domen na Vercel-u
 
 ## Kontakt
 
