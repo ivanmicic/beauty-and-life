@@ -16,3 +16,6 @@ $RECYCLE.BIN/
 
 # Logovi
 *.log
+
+# Vercel
+.vercel

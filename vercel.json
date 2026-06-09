@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/beauty-and-life.html" }
+  ]
+}

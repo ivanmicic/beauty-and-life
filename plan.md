@@ -24,12 +24,13 @@ Glavne karakteristike:
 
 ## Trenutno stanje
 
-Projekat je u aktivnom razvoju. Vizuelna podesavanja hero sekcije i interaktivnost kartica unapredjeni u sesiji 2026-05-27.
+Projekat je spreman za susret sa vlasnicom i deploy. UI/UX korekcije (P0–P2), favicon, Open Graph i README azurirani u sesiji 2026-06-09.
 
 Postojeci fajlovi:
 
 - `beauty-and-life.html` - ceo sajt
-- `assets/beauty-and-life-studio.png` - fotografija salona (zamena za placeholder)
+- `assets/beauty-and-life-studio.png` - fotografija salona
+- `assets/favicon.svg` - favicon (kapljica)
 - `README.md` - opis projekta i uputstvo za pokretanje
 - `.gitignore` - ignorisani fajlovi
 - `Beauty and life PROMT.docx` - originalni prompt/specifikacija
@@ -72,23 +73,16 @@ Postojeci fajlovi:
 
 ### Prioritet 1
 
-- Dodati jos fotografija salona i vlasnice u sekciju "O salonu".
+- Dodati jos fotografija salona i vlasnice u sekciju "O salonu" (nakon susreta sa Danijelom).
 - Popuniti galeriju za "Nega koze" kada fotografije budu dostupne.
-- Dopuniti Instagram sekciju sa preostalih 5 fotografija po izboru vlasnice (imamo template, dodaje se brzo).
-- Azurirati Instagram linkove na pravi profil u footeru i kontakt sekciji (trenutno vodi na instagram.com/). Pravi link: https://www.instagram.com/danijela_beauty_and_life/
-- Dodati favicon.
-- Dodati Open Graph meta tagove za lep prikaz pri deljenju linka.
-- Proveriti tekstove, cene, kontakt podatke.
-- Proveriti prikaz na mobilnom uredjaju.
+- Dopuniti Instagram sekciju sa preostalih 5 fotografija po izboru vlasnice.
+- Proveriti tekstove, cene, kontakt podatke (nakon susreta sa Danijelom).
+- Pri deploy-u zameniti SITE_URL u og:image, og:url i twitter:image meta tagovima.
 
 ### Prioritet 2
 
-- Odluciti i implementirati resenje za zakazivanje termina:
-  - WhatsApp link (najbrze, odmah)
-  - Formspree / Web3Forms (forma salje email, 10 minuta podesavanja)
-  - Calendly (automatska potvrda termina)
-  - Booking sistem: Fresha, Treatwell, Booksy (profesionalno, placa se)
-- Testirati slanje forme na desktopu i telefonu.
+- Implementirati WhatsApp resenje za zakazivanje termina (dogovoreno kao sledeci korak).
+- Testirati slanje forme / WhatsApp link na desktopu i telefonu.
 - Proveriti mapu i adresu.
 
 ### Prioritet 3
@@ -128,11 +122,27 @@ Agent treba da proveri trenutno stanje pre izmena i da nakon znacajne izmene azu
 - Treba odluciti gde ce sajt biti hostovan.
 - Footer SVG logo jos uvek ima stari B&L text unutar SVG - moze se uskladiti sa novim logom ako bude potrebno.
 - Sve galerije imaju hardkodovane putanje u GALLERIES objektu u HTML-u. Dodavanje novih slika zahteva azuriranje tog niza. Folder i fajl nazivi moraju biti tacni (ukljucujuci dijakritike i velikaslovnost).
-- Instagram linkovi u footeru i kontakt sekciji jos vode na instagram.com/ umesto na pravi profil @danijela_beauty_and_life.
+- Instagram linkovi u footeru i kontakt sekciji vode na pravi profil @danijela_beauty_and_life (reseno).
 - Galerija za "Nega koze" je prazna - ceka fotografije.
 - Instagram sekcija ima samo 1 od 6 fotografija (ig-1.jpg). Preostalih 5 ceka izbor vlasnice.
 
 ## Dnevnik rada
+
+### 2026-06-09
+
+- UI/UX audit i korekcije P0: hero eyebrow prelom na mobilnom, kontrast --color-text-faint.
+- UI/UX korekcije P1: hero naslov tezina/senka, uskladjeni logoi, :active feedback, tap targeti 44px, hijerarhija naslova, IG placeholder ikonice.
+- UI/UX korekcije P2: section--alt klasa, stat-suffix klasa, uklonjen mrtav CSS, ujednacene SVG ikone, Nega koze CTA "Zakazi termin", hero-sub font-weight 400.
+- Dodat favicon (assets/favicon.svg) i Open Graph / Twitter Card meta tagovi.
+- Azuriran README.md.
+- Azuriran plan.md.
+
+### 2026-06-06
+
+- Naslovi (h1-h6) prebaceni na font-weight 400 (bez bolda).
+- Hero eyebrow povecan i bez bolda.
+- Logo promenjen sa B&L na Beauty&Life sa stilizovanim ampersandom.
+- Obrisan nekorišćeni assets/dark-bg.svg.
 
 ### 2026-05-27
 
