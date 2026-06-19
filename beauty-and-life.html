@@ -1799,11 +1799,11 @@
         <p data-i18n="ig.handle">@danijela_beauty_and_life</p>
         <div class="ig-grid">
           <a class="ig-tile" href="https://www.instagram.com/p/DYNyD9GMaN0/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 1" style="background-image: url('assets/ig/ig-1.jpg'); background-size: cover; background-position: center;"></a>
-          <a class="ig-tile ig-tile-placeholder" href="https://www.instagram.com/danijela_beauty_and_life/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 2"></a>
-          <a class="ig-tile ig-tile-placeholder" href="https://www.instagram.com/danijela_beauty_and_life/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 3"></a>
-          <a class="ig-tile ig-tile-placeholder" href="https://www.instagram.com/danijela_beauty_and_life/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 4"></a>
-          <a class="ig-tile ig-tile-placeholder" href="https://www.instagram.com/danijela_beauty_and_life/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 5"></a>
-          <a class="ig-tile ig-tile-placeholder" href="https://www.instagram.com/danijela_beauty_and_life/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 6"></a>
+          <a class="ig-tile ig-tile-placeholder" href="https://www.instagram.com/danijela_beauty_and_life/reel/DX7WD_sOD2t/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 2"></a>
+          <a class="ig-tile ig-tile-placeholder" href="https://www.instagram.com/danijela_beauty_and_life/reel/DWtXyVpjHNN/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 3"></a>
+          <a class="ig-tile ig-tile-placeholder" href="https://www.instagram.com/danijela_beauty_and_life/reel/DUrPmkSDCtN/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 4"></a>
+          <a class="ig-tile ig-tile-placeholder" href="https://www.instagram.com/danijela_beauty_and_life/reel/DQFHuF6jH5p/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 5"></a>
+          <a class="ig-tile ig-tile-placeholder" href="https://www.instagram.com/danijela_beauty_and_life/reel/DLVObshI7mK/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 6"></a>
         </div>
       </div>
     </div>
@@ -2134,7 +2134,8 @@ const i18n = {
     'form.note':         'Napomena',
     'form.note.ph':      'Bilo koja dodatna napomena za Danijelu...',
     'form.submit':       'Pošalji zahtev',
-    'form.success':      'Vaš zahtev je uspešno poslat. Danijela će vas kontaktirati u najkraćem roku.',
+    'form.success':      'WhatsApp će se otvoriti sa vašim zahtevom. Pošaljite poruku da potvrdite termin.',
+    'form.wa.intro':     'Zdravo! Želim da zakažem termin u Beauty and Life salonu.',
 
     'loc.eyebrow':  'Lokacija & Kontakt',
     'loc.title':    'Posetite nas u centru Požarevca',
@@ -2271,7 +2272,8 @@ const i18n = {
     'form.note':         'Note',
     'form.note.ph':      'Any additional notes for Danijela...',
     'form.submit':       'Send request',
-    'form.success':      'Your request has been sent successfully. Danijela will contact you as soon as possible.',
+    'form.success':      'WhatsApp will open with your request. Send the message to confirm your appointment.',
+    'form.wa.intro':     'Hello! I would like to book an appointment at Beauty and Life salon.',
 
     'loc.eyebrow':  'Location & Contact',
     'loc.title':    'Visit us in the centre of Požarevac',
@@ -2466,8 +2468,52 @@ function setupCounters() {
 }
 
 /* =========================================================
-   FORM
+   FORM — WhatsApp booking
    ========================================================= */
+const WHATSAPP_BOOKING_NUMBER = '381628051239';
+
+function getSelectedOptionText(select) {
+  const opt = select.options[select.selectedIndex];
+  return opt ? opt.textContent.trim() : '';
+}
+
+function formatBookingDate(isoDate) {
+  if (!isoDate) return '';
+  const [y, m, d] = isoDate.split('-');
+  return currentLang === 'sr' ? `${d}.${m}.${y}.` : `${m}/${d}/${y}`;
+}
+
+function buildWhatsAppBookingMessage(form) {
+  const name = form.querySelector('#f-name')?.value.trim() || '';
+  const phone = form.querySelector('#f-phone')?.value.trim() || '';
+  const email = form.querySelector('#f-email')?.value.trim() || '';
+  const serviceSelect = form.querySelector('#f-service');
+  const service = serviceSelect ? getSelectedOptionText(serviceSelect) : '';
+  const date = formatBookingDate(form.querySelector('#f-date')?.value || '');
+  const time = form.querySelector('#f-time')?.value || '';
+  const note = form.querySelector('#f-note')?.value.trim() || '';
+
+  const lines = [
+    t('form.wa.intro'),
+    '',
+    `${t('form.name')}: ${name}`,
+    `${t('form.phone')}: ${phone}`,
+  ];
+
+  if (email) lines.push(`${t('form.email')}: ${email}`);
+  lines.push(`${t('form.service')}: ${service}`);
+  lines.push(`${t('form.date')}: ${date}`);
+  lines.push(`${t('form.time')}: ${time}`);
+  if (note) lines.push(`${t('form.note')}: ${note}`);
+
+  return lines.join('\n');
+}
+
+function openWhatsAppBooking(message) {
+  const url = `https://wa.me/${WHATSAPP_BOOKING_NUMBER}?text=${encodeURIComponent(message)}`;
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+
 function setupForm() {
   const form = document.getElementById('booking-form');
   const success = document.getElementById('form-success');
@@ -2514,6 +2560,9 @@ function setupForm() {
       if (firstInvalid && typeof firstInvalid.focus === 'function') firstInvalid.focus();
       return;
     }
+
+    const message = buildWhatsAppBookingMessage(form);
+    openWhatsAppBooking(message);
 
     form.reset();
     if (success) {

@@ -24,7 +24,7 @@ Glavne karakteristike:
 
 ## Trenutno stanje
 
-Projekat je spreman za susret sa vlasnicom i deploy. UI/UX korekcije (P0–P2), favicon, Open Graph i README azurirani u sesiji 2026-06-09.
+Projekat je live na Vercel-u (beauty-and-life.vercel.app). WhatsApp zakazivanje preko forme implementirano (test broj 0628051239). Instagram sekcija: svih 6 polja povezano na objave (1 post + 5 reel-ova); preview slike za polja 2–6 jos cekaju rucno dodavanje u `assets/ig/`.
 
 Postojeci fajlovi:
 
@@ -52,6 +52,8 @@ Postojeci fajlovi:
 - Dodat CTA "Zakazi termin" unutar galerije koji vodi do forme za zakazivanje.
 - Dodat `assets/ig/` folder za Instagram fotografije; prvi tile povezan sa pravom fotografijom i linkom.
 - Instagram profil identifikovan: @danijela_beauty_and_life.
+- WhatsApp integracija forme za zakazivanje: validacija + otvaranje wa.me sa unapred popunjenom porukom (SR/EN).
+- Instagram grid: svih 6 polja povezano na konkretne objave (ig-1 post, ig-2–6 reel linkovi).
 
 ### Vizuelne izmene (2026-05-17)
 
@@ -73,16 +75,16 @@ Postojeci fajlovi:
 
 ### Prioritet 1
 
+- Dodati preview slike za Instagram polja 2–6 (`assets/ig/ig-2.jpg` … `ig-6.jpg`) — rucno sa reel cover kadrova.
 - Dodati jos fotografija salona i vlasnice u sekciju "O salonu" (nakon susreta sa Danijelom).
 - Popuniti galeriju za "Nega koze" kada fotografije budu dostupne.
-- Dopuniti Instagram sekciju sa preostalih 5 fotografija po izboru vlasnice.
 - Proveriti tekstove, cene, kontakt podatke (nakon susreta sa Danijelom).
+- Zameniti test WhatsApp broj (0628051239) produkcijskim brojem salona kada bude potvrden.
 - Opciono: custom domen na Vercel-u umesto beauty-and-life.vercel.app.
 
 ### Prioritet 2
 
-- Implementirati WhatsApp resenje za zakazivanje termina (dogovoreno kao sledeci korak).
-- Testirati slanje forme / WhatsApp link na desktopu i telefonu.
+- Testirati WhatsApp zakazivanje na mobilnom uredjaju (produkcija).
 - Proveriti mapu i adresu.
 
 ### Prioritet 3
@@ -115,17 +117,26 @@ Agent treba da proveri trenutno stanje pre izmena i da nakon znacajne izmene azu
 
 ## Napomene / problemi
 
-- Forma trenutno nema pravi backend (Formspree, Web3Forms ili WhatsApp link) - odluka odlozena.
+- Forma salje zahtev preko WhatsApp-a (nema Formspree/Web3Forms backend). Trenutno koristi test broj 0628051239 — zameniti produkcijskim pre objave.
 - U "O salonu" je jedna fotografija salona - dodati jos slika kada budu dostupne.
 - Treba proveriti da li su svi podaci tacni pre objave: cene, radno vreme, Instagram link, Facebook link.
-- Treba odluciti gde ce sajt biti hostovan.
 - Footer SVG logo jos uvek ima stari B&L text unutar SVG - moze se uskladiti sa novim logom ako bude potrebno.
 - Sve galerije imaju hardkodovane putanje u GALLERIES objektu u HTML-u. Dodavanje novih slika zahteva azuriranje tog niza. Folder i fajl nazivi moraju biti tacni (ukljucujuci dijakritike i velikaslovnost).
 - Instagram linkovi u footeru i kontakt sekciji vode na pravi profil @danijela_beauty_and_life (reseno).
 - Galerija za "Nega koze" je prazna - ceka fotografije.
-- Instagram sekcija ima samo 1 od 6 fotografija (ig-1.jpg). Preostalih 5 ceka izbor vlasnice.
+- Instagram sekcija: sva polja imaju linkove na objave; samo ig-1.jpg ima preview sliku. Polja 2–6 jos prikazuju placeholder dok se ne dodaju ig-2.jpg … ig-6.jpg.
+- Automatsko povlacenje Instagram feed-a odlozeno — rucno povezivanje linkova i slika.
 
 ## Dnevnik rada
+
+### 2026-06-19
+
+- Implementirana WhatsApp integracija forme za zakazivanje (broj 0628051239, poruka SR/EN).
+- Testirano lokalno — forma otvara WhatsApp sa popunjenim podacima.
+- Instagram sekcija: polja 2–6 povezana na reel linkove (@danijela_beauty_and_life).
+- Razmatran automatski Instagram feed — odluka: ostaje rucno povezivanje (API/widget kasnije po potrebi).
+- Azuriran plan.md.
+- Push na GitHub i redeploy na Vercel.
 
 ### 2026-06-09
 
