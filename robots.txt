@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://beauty-and-life.vercel.app/sitemap.xml

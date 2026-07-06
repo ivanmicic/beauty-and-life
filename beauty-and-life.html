@@ -8,6 +8,7 @@
   <meta name="author" content="Danijela Stojanović" />
   <meta name="robots" content="index, follow" />
   <title>Beauty and Life — Kozmetički salon, Požarevac</title>
+  <link rel="canonical" href="https://beauty-and-life.vercel.app/" />
 
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="assets/beauty-and-life-studio.png" />
@@ -28,6 +29,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://unpkg.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Tangerine:wght@400;700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -1000,6 +1002,12 @@
       transition: transform var(--transition);
       cursor: pointer;
     }
+    .ig-tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
     .ig-tile:hover { transform: scale(1.04); }
     .ig-tile::after {
       content: '';
@@ -1255,7 +1263,7 @@
     @media (min-width: 768px) {
       .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; gap: var(--space-12); }
     }
-    .footer h4 {
+    .footer h3 {
       font-family: var(--font-body);
       font-size: var(--text-xs);
       letter-spacing: 0.18em;
@@ -1494,6 +1502,57 @@
       .gallery-close { top: var(--space-3); right: var(--space-3); }
     }
   </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "BeautySalon"],
+    "name": "Beauty and Life",
+    "description": "Kozmetički salon Beauty and Life — Danijela Stojanović. Manikir, gel/akril, masaža, šminka, solarijum, obuke. Stari Korzo 30, TC Evrocentar, Požarevac.",
+    "url": "https://beauty-and-life.vercel.app/",
+    "image": "https://beauty-and-life.vercel.app/assets/beauty-and-life-studio.png",
+    "telephone": "+381652808026",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Stari Korzo 30, TC Evrocentar, I sprat lokal 08",
+      "addressLocality": "Požarevac",
+      "postalCode": "12000",
+      "addressCountry": "RS"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 44.6195,
+      "longitude": 21.1874
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "09:00",
+        "closes": "20:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Saturday",
+        "opens": "09:00",
+        "closes": "16:00"
+      }
+    ],
+    "sameAs": [
+      "https://www.instagram.com/danijela_beauty_and_life/",
+      "https://www.facebook.com/kozmetickisalonstudiobeautyandlife/"
+    ]
+  }
+  </script>
+
+  <!-- Zamenite sa stvarnim GA4 Measurement ID -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
 </head>
 <body>
 
@@ -1615,7 +1674,7 @@
         </div>
 
         <div class="about-image reveal">
-          <img src="assets/beauty-and-life-studio.png" alt="Studio Beauty and Life salon" loading="lazy" />
+          <img src="assets/beauty-and-life-studio.png" alt="Studio Beauty and Life salon" loading="lazy" decoding="async" width="908" height="909" />
         </div>
       </div>
 
@@ -1798,7 +1857,9 @@
         <h3 data-i18n="ig.title">Pratite nas na Instagramu</h3>
         <p data-i18n="ig.handle">@danijela_beauty_and_life</p>
         <div class="ig-grid">
-          <a class="ig-tile" href="https://www.instagram.com/p/DYNyD9GMaN0/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 1" style="background-image: url('assets/ig/ig-1.jpg'); background-size: cover; background-position: center;"></a>
+          <a class="ig-tile" href="https://www.instagram.com/p/DYNyD9GMaN0/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 1">
+            <img src="assets/ig/ig-1.jpg" alt="Beauty and Life — Instagram objava 1" loading="lazy" decoding="async" width="490" height="819" />
+          </a>
           <a class="ig-tile ig-tile-placeholder" href="https://www.instagram.com/danijela_beauty_and_life/reel/DX7WD_sOD2t/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 2"></a>
           <a class="ig-tile ig-tile-placeholder" href="https://www.instagram.com/danijela_beauty_and_life/reel/DWtXyVpjHNN/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 3"></a>
           <a class="ig-tile ig-tile-placeholder" href="https://www.instagram.com/danijela_beauty_and_life/reel/DUrPmkSDCtN/" target="_blank" rel="noopener noreferrer" aria-label="Instagram post 4"></a>
@@ -1983,7 +2044,7 @@
       </div>
 
       <div>
-        <h4 data-i18n="footer.links">Brzi linkovi</h4>
+        <h3 data-i18n="footer.links">Brzi linkovi</h3>
         <ul class="footer-links">
           <li><a href="#o-salonu"    data-i18n="nav.about">O salonu</a></li>
           <li><a href="#usluge"      data-i18n="nav.services">Usluge</a></li>
@@ -1995,7 +2056,7 @@
       </div>
 
       <div>
-        <h4 data-i18n="footer.contact">Kontakt</h4>
+        <h3 data-i18n="footer.contact">Kontakt</h3>
         <ul class="footer-links">
           <li>Stari Korzo 30</li>
           <li>TC Evrocentar, I sprat lokal 08</li>
@@ -2007,7 +2068,7 @@
     </div>
 
     <div class="footer-bottom">
-      <span data-i18n="footer.copy">© 2025 Beauty and Life. Sva prava zadržana.</span>
+      <span data-i18n="footer.copy">© 2026 Beauty and Life. Sva prava zadržana.</span>
     </div>
   </div>
 </footer>
@@ -2149,7 +2210,7 @@ const i18n = {
     'footer.tag':     'Kozmetički salon Danijele Stojanović — toplina, posvećenost i preciznost u svakom detalju, u srcu Požarevca.',
     'footer.links':   'Brzi linkovi',
     'footer.contact': 'Kontakt',
-    'footer.copy':    '© 2025 Beauty and Life. Sva prava zadržana.',
+    'footer.copy':    '© 2026 Beauty and Life. Sva prava zadržana.',
 
     'reviews.list': [
       { quote: 'Danijela je apsolutna profesionalka. Gel nokti su savršeni već mesecima!', name: 'Milica S.', source: 'Instagram' },
@@ -2287,7 +2348,7 @@ const i18n = {
     'footer.tag':     "Danijela Stojanović's beauty salon — warmth, dedication and precision in every detail, in the heart of Požarevac.",
     'footer.links':   'Quick links',
     'footer.contact': 'Contact',
-    'footer.copy':    '© 2025 Beauty and Life. All rights reserved.',
+    'footer.copy':    '© 2026 Beauty and Life. All rights reserved.',
 
     'reviews.list': [
       { quote: 'Danijela is an absolute professional. My gel nails have been perfect for months!', name: 'Milica S.', source: 'Instagram' },
@@ -2616,6 +2677,14 @@ function setupMap() {
 /* =========================================================
    GALLERY LIGHTBOX
    ========================================================= */
+const GALLERY_LABEL_KEYS = {
+  nokti:     'service.s1.title',
+  masaza:    'service.s2.title',
+  sminka:    'service.s3.title',
+  solarijum: 'service.s4.title',
+  obuke:     'service.s6.title',
+};
+
 const GALLERIES = {
   nokti: [
     'Galerija nokti/Nokti 1.jpeg',
@@ -2703,7 +2772,8 @@ function renderGallerySlide() {
   img.classList.add('is-loading');
   img.onload = () => img.classList.remove('is-loading');
   img.src = images[index];
-  img.alt = `Nokti — slika ${index + 1}`;
+  const galleryLabel = t(GALLERY_LABEL_KEYS[key]) || key;
+  img.alt = `${galleryLabel} — slika ${index + 1}`;
 
   if (counter) counter.textContent = `${index + 1} / ${images.length}`;
   if (prev)  index > 0                  ? prev.removeAttribute('hidden') : prev.setAttribute('hidden', '');
@@ -2796,7 +2866,7 @@ document.addEventListener('DOMContentLoaded', () => {
   <button class="gallery-prev" id="gallery-prev" aria-label="Prethodna slika">‹</button>
   <button class="gallery-next" id="gallery-next" aria-label="Sledeća slika">›</button>
   <div class="gallery-inner">
-    <img class="gallery-img" id="gallery-img" src="" alt="Galerija nokti" />
+    <img class="gallery-img" id="gallery-img" src="" alt="" decoding="async" />
     <div class="gallery-counter" id="gallery-counter"></div>
     <a href="#zakazivanje" class="gallery-cta" id="gallery-cta" onclick="closeGallery();" data-i18n="gallery.cta">Zakaži termin →</a>
   </div>
