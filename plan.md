@@ -24,7 +24,7 @@ Glavne karakteristike:
 
 ## Trenutno stanje
 
-Projekat je live na Vercel-u (beauty-and-life.vercel.app). WhatsApp zakazivanje preko forme implementirano (test broj 0628051239). Instagram sekcija: svih 6 polja povezano na objave (1 post + 5 reel-ova); preview slike za polja 2–6 jos cekaju rucno dodavanje u `assets/ig/`.
+Projekat je live na Vercel-u (beauty-and-life.vercel.app). WhatsApp zakazivanje preko forme implementirano (test broj 0628051239). Instagram sekcija: svih 6 polja ima preview slike (`ig-1.jpg` … `ig-6.jpg`) i linkove na objave. Kontakt/footer Instagram vodi na `@danijela_beauty_and_life_worid`.
 
 Postojeci fajlovi:
 
@@ -54,6 +54,8 @@ Postojeci fajlovi:
 - Instagram profil identifikovan: @danijela_beauty_and_life.
 - WhatsApp integracija forme za zakazivanje: validacija + otvaranje wa.me sa unapred popunjenom porukom (SR/EN).
 - Instagram grid: svih 6 polja povezano na konkretne objave (ig-1 post, ig-2–6 reel linkovi).
+- Instagram preview slike za polja 2–6 dodate (`assets/ig/ig-2.jpg` … `ig-6.jpg`) sa Instagram oEmbed thumbnail-a.
+- SEO audit 2026-07-06: canonical, JSON-LD, GA4 placeholder, robots.txt, sitemap.xml, gallery alt fix, footer h3, image lazy loading.
 
 ### Vizuelne izmene (2026-05-17)
 
@@ -75,7 +77,8 @@ Postojeci fajlovi:
 
 ### Prioritet 1
 
-- Dodati preview slike za Instagram polja 2–6 (`assets/ig/ig-2.jpg` … `ig-6.jpg`) — rucno sa reel cover kadrova.
+- Zameniti GA4 placeholder pravim Google Analytics 4 Measurement ID-em.
+- Deploy robots.txt i sitemap.xml na produkciju (Vercel).
 - Dodati jos fotografija salona i vlasnice u sekciju "O salonu" (nakon susreta sa Danijelom).
 - Popuniti galeriju za "Nega koze" kada fotografije budu dostupne.
 - Proveriti tekstove, cene, kontakt podatke (nakon susreta sa Danijelom).
@@ -90,7 +93,7 @@ Postojeci fajlovi:
 ### Prioritet 3
 
 - Testirati prikaz na mobilnom, tabletu i desktopu (produkcija: beauty-and-life.vercel.app).
-- Proveriti SEO osnovu: title, description, headings, alt tekstovi.
+- Dovrsiti SEO na produkciji: GA4 Measurement ID, robots.txt i sitemap.xml (vidi Prioritet 1).
 - Opciono: custom domen.
 
 ## Vazne odluke
@@ -122,12 +125,26 @@ Agent treba da proveri trenutno stanje pre izmena i da nakon znacajne izmene azu
 - Treba proveriti da li su svi podaci tacni pre objave: cene, radno vreme, Instagram link, Facebook link.
 - Footer SVG logo jos uvek ima stari B&L text unutar SVG - moze se uskladiti sa novim logom ako bude potrebno.
 - Sve galerije imaju hardkodovane putanje u GALLERIES objektu u HTML-u. Dodavanje novih slika zahteva azuriranje tog niza. Folder i fajl nazivi moraju biti tacni (ukljucujuci dijakritike i velikaslovnost).
-- Instagram linkovi u footeru i kontakt sekciji vode na pravi profil @danijela_beauty_and_life (reseno).
+- Instagram linkovi u footeru i kontakt sekciji vode na @danijela_beauty_and_life_worid (reseno 2026-07-20).
 - Galerija za "Nega koze" je prazna - ceka fotografije.
-- Instagram sekcija: sva polja imaju linkove na objave; samo ig-1.jpg ima preview sliku. Polja 2–6 jos prikazuju placeholder dok se ne dodaju ig-2.jpg … ig-6.jpg.
+- Instagram sekcija: svih 6 polja ima preview slike i linkove na objave (reseno 2026-07-20).
 - Automatsko povlacenje Instagram feed-a odlozeno — rucno povezivanje linkova i slika.
 
 ## Dnevnik rada
+
+### 2026-07-20
+
+- Instagram preview: skinuti thumbnail-i za reel-ove 2–6 preko Instagram oEmbed API-ja (`ig-2.jpg` … `ig-6.jpg`).
+- HTML: uklonjeni `ig-tile-placeholder` elementi; svih 6 polja sada prikazuje `<img>`.
+- Instagram handle prečica u sekciji "Pratite nas" klikabilna; kontakt/footer vode na `@danijela_beauty_and_life_worid`.
+- Deploy robots.txt i sitemap.xml.
+- Push na GitHub i redeploy na Vercel.
+
+### 2026-07-06
+
+- SEO audit: canonical, JSON-LD (LocalBusiness), GA4 placeholder, robots.txt, sitemap.xml.
+- Ispravke: gallery alt tekstovi, footer h3, lazy loading slika u beauty-and-life.html.
+- Azuriran plan.md.
 
 ### 2026-06-19
 
